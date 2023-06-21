@@ -1,0 +1,25 @@
+{
+    "name": "luzrain/telegram-bot-bundle",
+    "description": "Symfony bundle for Telegram Bot API",
+    "keywords": ["telegram", "telegram-bot-api", "telegram-bot", "telegram-bundle"],
+    "homepage": "https://github.com/luzrain/telegram-bot-bundle",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Anton Zenkov",
+            "email": "anton.z@live.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Luzrain\\TelegramBotBundle\\": "src/"
+        }
+    },
+    "require": {
+        "php" : "^8.2",
+        "symfony/console": "^6.3",
+        "symfony/framework-bundle": "^6.3",
+        "luzrain/telegram-bot-api": "^1.0"
+    }
+}

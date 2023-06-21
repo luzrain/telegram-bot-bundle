@@ -7,7 +7,6 @@ namespace Luzrain\TelegramBotBundle\DependencyInjection;
 use Luzrain\TelegramBotBundle\Attribute\OnCommand;
 use Luzrain\TelegramBotBundle\Attribute\OnMemberBanned;
 use Luzrain\TelegramBotBundle\Attribute\OnMessage;
-use Luzrain\TelegramBotBundle\TelegramBot\WebHookController;
 use Luzrain\TelegramBotBundle\TelegramBot\WebHookHandler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
