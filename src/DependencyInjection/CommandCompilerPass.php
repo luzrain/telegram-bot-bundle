@@ -16,66 +16,63 @@ use TelegramBot\Api\Client;
 
 final class CommandCompilerPass implements CompilerPassInterface
 {
+    private const FIND_ATTRIBUTES = [
+        OnCommand::class,
+        OnMemberBanned::class,
+        OnMessage::class
+    ];
+
     public function process(ContainerBuilder $container)
     {
-        $commandTaggedServices = $container->findTaggedServiceIds('telegram_bot.command');
+        $serviceClasses = array_keys($container->findTaggedServiceIds('telegram_bot.command'));
+        $controllersMap = iterator_to_array($this->controllerMap($serviceClasses, $container->getReflectionClass(...)));
+        $locatorReferenceMap = iterator_to_array($this->locatorReferenceMap($serviceClasses));
 
-        $commandMap = $this->attributeProcess($container, $commandTaggedServices, OnCommand::class);
-        $memberBannedMap = $this->attributeProcess($container, $commandTaggedServices, OnMemberBanned::class);
-        $messageMap = $this->attributeProcess($container, $commandTaggedServices, OnMessage::class);
-
-        $container
-            ->register('telegram_bot.command_controllers_locator', ServiceLocator::class)
-            ->setArguments([$commandMap[0]])
-            ->addTag('container.service_locator')
-        ;
+        // Commands should be first
+        uksort($controllersMap, fn (string $a) => !str_starts_with($a, '/'));
 
         $container
-            ->register('telegram_bot.member_banned_controllers_locator', ServiceLocator::class)
-            ->setArguments([$memberBannedMap[0]])
-            ->addTag('container.service_locator')
-        ;
-
-        $container
-            ->register('telegram_bot.message_controllers_locator', ServiceLocator::class)
-            ->setArguments([$messageMap[0]])
+            ->register('telegram_bot.controllers_locator', ServiceLocator::class)
+            ->setArguments([$locatorReferenceMap])
             ->addTag('container.service_locator')
         ;
 
         $container
             ->register('telegram_bot.webhook_handler', WebHookHandler::class)
             ->setArgument('$client', new Reference(Client::class))
-            ->setArgument('$commandMap', $commandMap[1])
-            ->setArgument('$commandLocator', new Reference('telegram_bot.command_controllers_locator'))
-            ->setArgument('$memberBannedMap', $memberBannedMap[1])
-            ->setArgument('$memberBannedLocatorMap', new Reference('telegram_bot.member_banned_controllers_locator'))
-            ->setArgument('$messageMap', $messageMap[1])
-            ->setArgument('$messageLocatorMap', new Reference('telegram_bot.message_controllers_locator'))
+            ->setArgument('$serviceLocator', new Reference('telegram_bot.controllers_locator'))
+            ->setArgument('$controllersMap', $controllersMap)
         ;
     }
 
-    private function attributeProcess(ContainerBuilder $container, array $taggedServices, string $attributeClass): array
+    /**
+     * @param list<class-string> $commandServiceIds
+     * @param \Closure(string):\ReflectionClass $reflectionClosure
+     * @return \Generator<string, string>
+     */
+    private function controllerMap(array $commandServiceIds, \Closure $reflectionClosure): \Generator
     {
-        $serviceDefinitions = array_map(fn (string $id) => $container->getDefinition($id), array_keys($taggedServices));
-        $locatorClassMap = [];
-        $commandCallbackMap = [];
-
-        foreach ($serviceDefinitions as $serviceDefinition) {
-            $class = $serviceDefinition->getClass();
-            $reflectionClass = $container->getReflectionClass($class);
-
-            foreach ($reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC) as $reflectionMethod) {
-                $attributes = $reflectionMethod->getAttributes($attributeClass);
-                $methodName = $reflectionMethod->getName();
-
-                foreach ($attributes as $attribute) {
-                    $attributeInstance = $attribute->newInstance();
-                    $locatorClassMap[$class] = new Reference($class);
-                    $commandCallbackMap[$attributeInstance->name ?? $attributeInstance::class] = [$class, $methodName];
+        foreach ($commandServiceIds as $class) {
+            foreach ($reflectionClosure($class)->getMethods(\ReflectionMethod::IS_PUBLIC) as $reflectionMethod) {
+                $method = $reflectionMethod->getName();
+                foreach (self::FIND_ATTRIBUTES as $attribute) {
+                    foreach ($reflectionMethod->getAttributes($attribute) as $controllerAttribute) {
+                        $attributeInstance = $controllerAttribute->newInstance();
+                        yield $attributeInstance->command ?? $attributeInstance::class => "$class::$method";
+                    }
                 }
             }
         }
+    }
 
-        return [$locatorClassMap, $commandCallbackMap];
+    /**
+     * @param list<class-string> $serviceClasses
+     * @return \Generator<class-string, Reference>
+     */
+    private function locatorReferenceMap(array $serviceClasses): \Generator
+    {
+        foreach ($serviceClasses as $serviceClass) {
+            yield $serviceClass => new Reference($serviceClass);
+        }
     }
 }
