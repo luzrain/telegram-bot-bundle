@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Luzrain\TelegramBotBundle\TelegramBot;
 
-use TelegramBot\Api\Methods\SendMessage;
-use TelegramBot\Api\Types\ForceReply;
-use TelegramBot\Api\Types\InlineKeyboardMarkup;
-use TelegramBot\Api\Types\ReplyKeyboardMarkup;
-use TelegramBot\Api\Types\ReplyKeyboardRemove;
-use TelegramBot\Api\Types\User;
+use Luzrain\TelegramBotApi\Method\SendMessage;
+use Luzrain\TelegramBotApi\Type\ForceReply;
+use Luzrain\TelegramBotApi\Type\InlineKeyboardMarkup;
+use Luzrain\TelegramBotApi\Type\ReplyKeyboardMarkup;
+use Luzrain\TelegramBotApi\Type\ReplyKeyboardRemove;
+use Luzrain\TelegramBotApi\Type\User;
 
 abstract class TelegramCommand
 {
@@ -32,7 +32,7 @@ abstract class TelegramCommand
         InlineKeyboardMarkup|ReplyKeyboardMarkup|ReplyKeyboardRemove|ForceReply|null $replyMarkup = null,
     ): SendMessage {
         return new SendMessage(
-            chatId: $this->getUser()->getId(),
+            chatId: $this->user->id,
             text: $text,
             replyMarkup: $replyMarkup,
         );

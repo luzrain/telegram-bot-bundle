@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Luzrain\TelegramBotBundle\DependencyInjection;
 
+use Luzrain\TelegramBotApi\BotApi;
+use Luzrain\TelegramBotApi\ClientApi;
 use Luzrain\TelegramBotBundle\TelegramBot\SetWebhookCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\TelegramCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\WebHookController;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
-use TelegramBot\Api\BotApi;
-use TelegramBot\Api\Client;
 
 final class TelegramBotExtension extends Extension
 {
@@ -22,11 +22,14 @@ final class TelegramBotExtension extends Extension
 
         $container
             ->autowire(BotApi::class)
-            ->setArguments([$config['api_token']])
+            ->setArgument('$requestFactory', new Reference($config['request_factory']))
+            ->setArgument('$streamFactory', new Reference($config['stream_factory']))
+            ->setArgument('$client', new Reference($config['http_client']))
+            ->setArgument('$token', $config['api_token'])
         ;
 
         $container
-            ->autowire(Client::class)
+            ->autowire('telegram_bot.client_api', ClientApi::class)
         ;
 
         $container

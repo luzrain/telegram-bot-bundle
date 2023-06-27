@@ -16,6 +16,18 @@ final class Configuration implements ConfigurationInterface
 
         $rootNode
             ->children()
+                ->scalarNode('http_client')
+                ->isRequired()
+                ->cannotBeEmpty()
+            ->end()
+                ->scalarNode('request_factory')
+                ->isRequired()
+                ->cannotBeEmpty()
+            ->end()
+                ->scalarNode('stream_factory')
+                ->isRequired()
+                ->cannotBeEmpty()
+            ->end()
                 ->scalarNode('api_token')
                 ->isRequired()
                 ->cannotBeEmpty()

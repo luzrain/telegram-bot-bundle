@@ -12,7 +12,6 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ServiceLocator;
-use TelegramBot\Api\Client;
 
 final class CommandCompilerPass implements CompilerPassInterface
 {
@@ -39,7 +38,7 @@ final class CommandCompilerPass implements CompilerPassInterface
 
         $container
             ->register('telegram_bot.webhook_handler', WebHookHandler::class)
-            ->setArgument('$client', new Reference(Client::class))
+            ->setArgument('$client', new Reference('telegram_bot.client_api'))
             ->setArgument('$serviceLocator', new Reference('telegram_bot.controllers_locator'))
             ->setArgument('$controllersMap', $controllersMap)
         ;
