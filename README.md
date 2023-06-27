@@ -24,8 +24,17 @@ return [
 # config/packages/telegram_bot.yaml
 
 telegram_bot:
-  api_token: 'paste_your_telegram_bot_token'
+  # Psr\Http\Client\ClientInterface implementation
+  http_client: GuzzleHttp\ClientInterface
 
+  # Psr\Http\Message\RequestFactoryInterface implementation
+  request_factory: httpFactory
+
+  # Psr\Http\Message\StreamFactoryInterface implementation
+  stream_factory: httpFactory
+
+  # Bot api token
+  api_token: API_TOKEN
 ```
 
 ### Configure webhook route
