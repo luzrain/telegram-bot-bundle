@@ -46,6 +46,7 @@ final class TelegramBotExtension extends Extension
         $container
             ->register('telegram_bot.webhook_controller', WebHookController::class)
             ->setArgument('$webHookHandler', new Reference('telegram_bot.webhook_handler'))
+            ->setArgument('$secretToken', $config['secret_token'])
             ->addTag('controller.service_arguments')
             ->addMethodCall('setContainer', [new Reference('service_container')])
         ;
@@ -53,6 +54,7 @@ final class TelegramBotExtension extends Extension
         $container
             ->register('telegram_bot.set_webhook_command', SetWebhookCommand::class)
             ->setArgument('$botApi', new Reference(BotApi::class))
+            ->setArgument('$secretToken', $config['secret_token'])
             ->addTag('console.command')
         ;
 

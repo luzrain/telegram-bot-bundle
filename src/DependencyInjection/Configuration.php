@@ -32,6 +32,9 @@ final class Configuration implements ConfigurationInterface
                 ->isRequired()
                 ->cannotBeEmpty()
             ->end()
+                ->scalarNode('secret_token')
+                ->defaultValue(null)
+            ->end()
         ->end();
 
         return $treeBuilder;

@@ -10,12 +10,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 final class WebHookController extends AbstractController
 {
-    public function __construct(private WebHookHandler $webHookHandler)
-    {
+    public function __construct(
+        private WebHookHandler $webHookHandler,
+        private string|null $secretToken,
+    ) {
     }
 
     /**
@@ -27,6 +30,10 @@ final class WebHookController extends AbstractController
     {
         if ($request->getMethod() !== 'POST') {
             throw new MethodNotAllowedHttpException(['POST'], 'Method Not Allowed');
+        }
+
+        if ($this->secretToken !== null && $request->headers->get('X-Telegram-Bot-Api-Secret-Token') !== $this->secretToken) {
+            throw new AccessDeniedHttpException('Access denied');
         }
 
         $response = new JsonResponse(

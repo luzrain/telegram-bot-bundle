@@ -8,7 +8,6 @@ use Luzrain\TelegramBotApi\BotApi;
 use Luzrain\TelegramBotApi\Exception\TelegramApiException;
 use Luzrain\TelegramBotApi\Method\SetWebhook;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,6 +17,7 @@ final class SetWebhookCommand extends Command
 {
     public function __construct(
         private BotApi $botApi,
+        private string|null $secretToken,
     ) {
         parent::__construct();
     }
@@ -62,6 +62,7 @@ final class SetWebhookCommand extends Command
             $this->botApi->call(new SetWebhook(
                 url: $url,
                 maxConnections: $maxConnections,
+                secretToken: $this->secretToken,
             ));
         } catch (TelegramApiException $e) {
             $io->error($e->getMessage());

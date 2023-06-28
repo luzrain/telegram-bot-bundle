@@ -26,15 +26,14 @@ return [
 telegram_bot:
   # Psr\Http\Client\ClientInterface implementation
   http_client: GuzzleHttp\ClientInterface
-
   # Psr\Http\Message\RequestFactoryInterface implementation
   request_factory: httpFactory
-
   # Psr\Http\Message\StreamFactoryInterface implementation
   stream_factory: httpFactory
-
   # Bot api token
   api_token: API_TOKEN
+  # Optional. Secret token to protect webhook endpoint from unauthenticated requests
+  secret_token: CHANGE_ME
 ```
 
 ### Configure webhook route
