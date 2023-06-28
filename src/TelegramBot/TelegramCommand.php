@@ -13,18 +13,13 @@ use Luzrain\TelegramBotApi\Type\User;
 
 abstract class TelegramCommand
 {
-    private User $user;
+    readonly protected User|null $user;
 
-    public function setUser(User $user): self
+    public function setUser(User|null $user): self
     {
         $this->user = $user;
 
         return $this;
-    }
-
-    public function getUser(): User
-    {
-        return $this->user;
     }
 
     protected function reply(

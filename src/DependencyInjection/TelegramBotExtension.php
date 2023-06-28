@@ -6,15 +6,24 @@ namespace Luzrain\TelegramBotBundle\DependencyInjection;
 
 use Luzrain\TelegramBotApi\BotApi;
 use Luzrain\TelegramBotApi\ClientApi;
+use Luzrain\TelegramBotBundle\Attribute\OnCallback;
+use Luzrain\TelegramBotBundle\Attribute\OnCommand;
+use Luzrain\TelegramBotBundle\Attribute\OnEvent;
 use Luzrain\TelegramBotBundle\TelegramBot\SetWebhookCommand;
-use Luzrain\TelegramBotBundle\TelegramBot\TelegramCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\WebHookController;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
 
 final class TelegramBotExtension extends Extension
 {
+    private const FIND_ATTRIBUTES = [
+        OnEvent::class,
+        OnCommand::class,
+        OnCallback::class,
+    ];
+
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = $this->getConfiguration($configs, $container);
@@ -33,11 +42,6 @@ final class TelegramBotExtension extends Extension
         ;
 
         $container
-            ->registerForAutoconfiguration(TelegramCommand::class)
-            ->addTag('telegram_bot.command')
-        ;
-
-        $container
             ->register('telegram_bot.webhook_controller', WebHookController::class)
             ->setArgument('$webHookHandler', new Reference('telegram_bot.webhook_handler'))
             ->addTag('controller.service_arguments')
@@ -49,6 +53,19 @@ final class TelegramBotExtension extends Extension
             ->setArgument('$botApi', new Reference(BotApi::class))
             ->addTag('console.command')
         ;
+
+        foreach (self::FIND_ATTRIBUTES as $attributeClass) {
+            $container->registerAttributeForAutoconfiguration($attributeClass, $this->controllerConfigurate(...));
+        }
+    }
+
+    private function controllerConfigurate(ChildDefinition $definition, object $attribute, \ReflectionMethod $reflector): void
+    {
+        $definition->addTag('telegram_bot.command', [
+            'event' => $attribute->event,
+            'value' => $attribute->value,
+            'controller' => $reflector->getDeclaringClass()->getName() . '::' . $reflector->getName(),
+        ]);
     }
 
     public function getAlias(): string

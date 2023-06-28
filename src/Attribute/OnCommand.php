@@ -4,13 +4,17 @@ declare(strict_types=1);
 
 namespace Luzrain\TelegramBotBundle\Attribute;
 
-#[\Attribute(\Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
+use Luzrain\TelegramBotApi\Event\Command;
+
+#[\Attribute(\Attribute::TARGET_METHOD)]
 final readonly class OnCommand
 {
-    public string $command;
+    public string $event;
+    public string $value;
 
     public function __construct(string $command)
     {
-        $this->command = '/' . ltrim($command, '/');
+        $this->event = Command::class;
+        $this->value = '/' . ltrim($command, '/');
     }
 }
