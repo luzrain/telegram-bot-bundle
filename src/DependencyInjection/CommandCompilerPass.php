@@ -12,6 +12,9 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 
 final class CommandCompilerPass implements CompilerPassInterface
 {
+    /**
+     * @psalm-suppress ArgumentTypeCoercion
+     */
     public function process(ContainerBuilder $container)
     {
         $controllers = $container->findTaggedServiceIds('telegram_bot.command');

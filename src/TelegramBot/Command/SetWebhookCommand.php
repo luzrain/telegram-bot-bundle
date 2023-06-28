@@ -50,18 +50,10 @@ final class SetWebhookCommand extends Command
             return Command::FAILURE;
         }
 
-        $maxConnections = (int) $input->getOption('max-connections');
-
-        if ($url === null) {
-            $io->error('--url option should be set');
-
-            return Command::FAILURE;
-        }
-
         try {
             $this->botApi->call(new SetWebhook(
                 url: $url,
-                maxConnections: $maxConnections,
+                maxConnections: (int) $input->getOption('max-connections'),
                 secretToken: $this->secretToken,
             ));
         } catch (TelegramApiException $e) {

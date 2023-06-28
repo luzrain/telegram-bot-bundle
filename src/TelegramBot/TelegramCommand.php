@@ -13,10 +13,11 @@ use Luzrain\TelegramBotApi\Type\User;
 
 abstract class TelegramCommand
 {
-    readonly protected User|null $user;
+    protected readonly User|null $user;
 
     public function setUser(User|null $user): self
     {
+        /** @psalm-suppress InaccessibleProperty */
         $this->user = $user;
 
         return $this;

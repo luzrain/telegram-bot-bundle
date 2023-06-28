@@ -20,12 +20,9 @@ use Symfony\Component\DependencyInjection\Reference;
 
 final class TelegramBotExtension extends Extension
 {
-    private const FIND_ATTRIBUTES = [
-        OnEvent::class,
-        OnCommand::class,
-        OnCallback::class,
-    ];
-
+    /**
+     * @psalm-suppress ArgumentTypeCoercion
+     */
     public function load(array $configs, ContainerBuilder $container)
     {
         $configuration = $this->getConfiguration($configs, $container);
@@ -70,9 +67,9 @@ final class TelegramBotExtension extends Extension
             ->addTag('console.command')
         ;
 
-        foreach (self::FIND_ATTRIBUTES as $attributeClass) {
-            $container->registerAttributeForAutoconfiguration($attributeClass, $this->controllerConfigurate(...));
-        }
+        $container->registerAttributeForAutoconfiguration(OnEvent::class, $this->controllerConfigurate(...));
+        $container->registerAttributeForAutoconfiguration(OnCommand::class, $this->controllerConfigurate(...));
+        $container->registerAttributeForAutoconfiguration(OnCallback::class, $this->controllerConfigurate(...));
     }
 
     private function controllerConfigurate(ChildDefinition $definition, object $attribute, \ReflectionMethod $reflector): void

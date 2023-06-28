@@ -68,9 +68,6 @@ $rules = [
     // Class DateTimeImmutable should be used instead of DateTime.
     'date_time_immutable' => true,
 
-    // Method chaining MUST be properly indented.
-    'method_chaining_indentation' => true,
-
     // Removes @param, @return and @var tags that don’t provide any useful information.
     'no_superfluous_phpdoc_tags' => true,
 

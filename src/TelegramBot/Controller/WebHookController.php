@@ -42,7 +42,7 @@ final class WebHookController extends AbstractController
             json: true,
         );
 
-        $response->headers->set('Content-Length', (string) strlen($response->getContent()));
+        $response->headers->set('Content-Length', (string) strlen((string) $response->getContent()));
 
         return $response;
     }

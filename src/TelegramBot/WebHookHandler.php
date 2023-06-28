@@ -54,6 +54,7 @@ final class WebHookHandler
 
     private function runController(string $controller, object $update, array $params = []): mixed
     {
+        /** @psalm-suppress PossiblyUndefinedArrayOffset */
         [$service, $method] = explode('::', $controller, 2);
         $controllerService = $this->serviceLocator
             ->get($service)

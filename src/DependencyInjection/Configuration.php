@@ -14,6 +14,7 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('telegram_bot');
         $rootNode = $treeBuilder->getRootNode();
 
+        /** @psalm-suppress UndefinedMethod */
         $rootNode
             ->children()
                 ->scalarNode('http_client')
