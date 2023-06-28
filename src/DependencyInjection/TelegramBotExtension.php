@@ -9,7 +9,9 @@ use Luzrain\TelegramBotApi\ClientApi;
 use Luzrain\TelegramBotBundle\Attribute\OnCallback;
 use Luzrain\TelegramBotBundle\Attribute\OnCommand;
 use Luzrain\TelegramBotBundle\Attribute\OnEvent;
-use Luzrain\TelegramBotBundle\TelegramBot\SetWebhookCommand;
+use Luzrain\TelegramBotBundle\TelegramBot\Command\DeleteWebhookCommand;
+use Luzrain\TelegramBotBundle\TelegramBot\Command\WebhookInfoCommand;
+use Luzrain\TelegramBotBundle\TelegramBot\Command\SetWebhookCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\WebHookController;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -50,6 +52,18 @@ final class TelegramBotExtension extends Extension
 
         $container
             ->register('telegram_bot.set_webhook_command', SetWebhookCommand::class)
+            ->setArgument('$botApi', new Reference(BotApi::class))
+            ->addTag('console.command')
+        ;
+
+        $container
+            ->register('telegram_bot.get_webhook_command', WebhookInfoCommand::class)
+            ->setArgument('$botApi', new Reference(BotApi::class))
+            ->addTag('console.command')
+        ;
+
+        $container
+            ->register('telegram_bot.delete_webhook_command', DeleteWebhookCommand::class)
             ->setArgument('$botApi', new Reference(BotApi::class))
             ->addTag('console.command')
         ;

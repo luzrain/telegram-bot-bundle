@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Luzrain\TelegramBotBundle\TelegramBot;
+namespace Luzrain\TelegramBotBundle\TelegramBot\Command;
 
 use Luzrain\TelegramBotApi\BotApi;
-use Luzrain\TelegramBotApi\Exception\TelegramBotApiException;
+use Luzrain\TelegramBotApi\Exception\TelegramApiException;
 use Luzrain\TelegramBotApi\Method\SetWebhook;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -22,30 +24,52 @@ final class SetWebhookCommand extends Command
 
     public static function getDefaultName(): string
     {
-        return 'telegram:set-webhook-url';
+        return 'telegram:webhook:set';
     }
 
     public static function getDefaultDescription(): string
     {
-        return 'Set Telegram bot webhook url';
+        return 'Set webhook url';
+    }
+
+    protected function configure(): void
+    {
+        $this->addOption('url', null, InputOption::VALUE_REQUIRED, 'Webhook url', '');
+        $this->addOption('max-connections', null, InputOption::VALUE_REQUIRED, 'Max connections', 40);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $webhookUrl = $io->ask('Provide a webhook1 url', '', $this->urlValidate(...));
 
         try {
-            $this->botApi->call(new SetWebhook(
-                url: $webhookUrl,
-            ));
-        } catch (TelegramBotApiException $e) {
+            $url = $this->urlValidate($input->getOption('url'));
+        } catch (\RuntimeException $e) {
             $io->error($e->getMessage());
 
             return Command::FAILURE;
         }
 
-        $io->success('Webhook url set to: ' . $webhookUrl);
+        $maxConnections = (int) $input->getOption('max-connections');
+
+        if ($url === null) {
+            $io->error('--url option should be set');
+
+            return Command::FAILURE;
+        }
+
+        try {
+            $this->botApi->call(new SetWebhook(
+                url: $url,
+                maxConnections: $maxConnections,
+            ));
+        } catch (TelegramApiException $e) {
+            $io->error($e->getMessage());
+
+            return Command::FAILURE;
+        }
+
+        $io->success('Webhook url set to: ' . $url);
 
         return Command::SUCCESS;
     }
