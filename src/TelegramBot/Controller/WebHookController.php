@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Luzrain\TelegramBotBundle\TelegramBot;
+namespace Luzrain\TelegramBotBundle\TelegramBot\Controller;
 
 use Luzrain\TelegramBotApi\Exception\TelegramCallbackException;
 use Luzrain\TelegramBotApi\Exception\TelegramTypeException;
+use Luzrain\TelegramBotBundle\TelegramBot\WebHookHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

@@ -20,6 +20,6 @@
         "php" : "^8.2",
         "symfony/console": "^6.3",
         "symfony/framework-bundle": "^6.3",
-        "luzrain/telegram-bot-api": "^1.0"
+        "luzrain/telegram-bot-api": "^2.0"
     }
 }
