@@ -1,13 +1,17 @@
-
 # Symfony bundle for Telegram Bot API
 
-A symfony bundle for `luzrain/telegram-bot-api`
+[![PHP ^8.2](https://img.shields.io/badge/PHP-^8.2-777bb3.svg?style=flat)](https://www.php.net/releases/8.2/en.php)
+![Symfony ^6.3](https://img.shields.io/badge/Symfony-^6.3-374151.svg?style=flat)
+[![Tests Status](https://img.shields.io/github/actions/workflow/status/luzrain/telegram-bot-api/tests.yaml?branch=master)](../../actions/workflows/tests.yaml)
+
+A symfony bundle for [luzrain/telegram-bot-api](https://github.com/luzrain/telegram-bot-api) library.
 
 ## Installation
 ### Install composer package
 ``` bash
-$ composer require luzrain/telegram-bot-bundle (TODO)
+$ composer require luzrain/telegram-bot-bundle
 ```
+
 ### Enable the Bundle
 ```php
 <?php
@@ -47,9 +51,43 @@ telegram_webhook:
 ```
 
 ### Set webhook url
+Install webhook url using the console command:
 ``` bash
-$ bin/console telegram:set-webhook-url
+$ bin/console telegram:webhook:set --url=https://domain.xyz/telagram-webhook
 ```
 
-..... TODO
+## Example of usage
+### Command controller
+```php
+use Luzrain\TelegramBotApi\Method;
+use Luzrain\TelegramBotApi\Type;
+use Luzrain\TelegramBotBundle\Attribute\OnCommand;
+use Luzrain\TelegramBotBundle\TelegramBot\TelegramCommand;
 
+final class StartCommandController extends TelegramCommand
+{
+    #[OnCommand('/start')]
+    public function __invoke(Type\Message $message, string $argument = ''): Method
+    {
+        return $this->reply('Hello from symfony bot');
+    }
+}
+```
+
+### Message controller
+```php
+use Luzrain\TelegramBotApi\Event;
+use Luzrain\TelegramBotApi\Method;
+use Luzrain\TelegramBotApi\Type;
+use Luzrain\TelegramBotBundle\Attribute\OnEvent;
+use Luzrain\TelegramBotBundle\TelegramBot\TelegramCommand;
+
+final class OnMessageController extends TelegramCommand
+{
+    #[OnEvent(Event\Message::class)]
+    public function __invoke(Type\Message $message): Method
+    {
+        return $this->reply('You write: ' . $message->text);
+    }
+}
+```
