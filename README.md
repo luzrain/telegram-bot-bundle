@@ -66,8 +66,9 @@ use Luzrain\TelegramBotBundle\TelegramBot\TelegramCommand;
 
 final class StartCommandController extends TelegramCommand
 {
+    // Be aware to set default values for arguments as they won't necessarily will be passed
     #[OnCommand('/start')]
-    public function __invoke(Type\Message $message, string $argument = ''): Method
+    public function __invoke(Type\Message $message, string $arg1 = '', string $arg2 = ''): Method
     {
         return $this->reply('Hello from symfony bot');
     }
@@ -80,14 +81,17 @@ use Luzrain\TelegramBotApi\Event;
 use Luzrain\TelegramBotApi\Method;
 use Luzrain\TelegramBotApi\Type;
 use Luzrain\TelegramBotBundle\Attribute\OnEvent;
-use Luzrain\TelegramBotBundle\TelegramBot\TelegramCommand;
 
-final class OnMessageController extends TelegramCommand
+// It's not necessary to extend TelegramCommand
+final class OnMessageController
 {
     #[OnEvent(Event\Message::class)]
     public function __invoke(Type\Message $message): Method
     {
-        return $this->reply('You write: ' . $message->text);
+        return new Method\SendMessage(
+            chatId: $message->from->id,
+            text: 'You write: ' . $message->text,
+        );
     }
 }
 ```

@@ -56,10 +56,11 @@ final class WebHookHandler
     {
         /** @psalm-suppress PossiblyUndefinedArrayOffset */
         [$service, $method] = explode('::', $controller, 2);
-        $controllerService = $this->serviceLocator
-            ->get($service)
-            ->setUser($update->from ?? null)
-        ;
+        $controllerService = $this->serviceLocator->get($service);
+
+        if ($controllerService instanceof TelegramCommand && isset($update->from)) {
+            $controllerService->setUser($update->from);
+        }
 
         return $controllerService->$method($update, ...$params);
     }
