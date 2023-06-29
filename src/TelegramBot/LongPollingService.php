@@ -12,12 +12,21 @@ use Psr\Http\Client\NetworkExceptionInterface;
 final class LongPollingService
 {
     private const LIMIT = 50;
-    private const TIMEOUT = 15;
+    private int $timeout = 15;
     private int $offset = 0;
 
     public function __construct(
         private BotApi $botApi,
     ) {
+    }
+
+    public function setTimeout(int $timeout): void
+    {
+        if ($timeout <= 0) {
+            throw new \InvalidArgumentException('timeout should be greater that 0');
+        }
+
+        $this->timeout = $timeout;
     }
 
     /**
@@ -38,7 +47,7 @@ final class LongPollingService
             $updates = $this->botApi->call(new GetUpdates(
                 offset: $this->offset,
                 limit: self::LIMIT,
-                timeout: self::TIMEOUT,
+                timeout: $this->timeout,
             ));
         } catch (NetworkExceptionInterface) {
             return;

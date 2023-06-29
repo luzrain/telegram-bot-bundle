@@ -10,6 +10,7 @@ use Luzrain\TelegramBotBundle\TelegramBot\LongPollingService;
 use Luzrain\TelegramBotBundle\TelegramBot\UpdateHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -33,22 +34,33 @@ final class PolllingCommand extends Command
         return 'Run polling client to receive updates';
     }
 
+    protected function configure(): void
+    {
+        $this->addOption('timeout', null, InputOption::VALUE_REQUIRED, 'Timeout for long polling connection in seconds', 15);
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $io = new SymfonyStyle($input, $output);
+        $timeout = (int) $input->getOption('timeout');
         $output->writeln('<info>Polling service started</info>');
+
+        try {
+            $this->longPollingService->setTimeout($timeout);
+        } catch (\InvalidArgumentException $e) {
+            $io->error($e->getMessage());
+            return Command::FAILURE;
+        }
 
         try {
             foreach ($this->longPollingService->cunsumeUpdates() as $update) {
                 $date = new \DateTimeImmutable();
                 $formattedDate = $date->format('Y-m-d H:i:s');
-
-                if ($output->isVerbose()) {
-                    $output->writeln(sprintf(
-                        '%s: [%s] Update received',
-                        $formattedDate,
-                        $update->updateId,
-                    ));
-                }
+                $output->writeln(sprintf(
+                    '%s: [%s] Update object received',
+                    $formattedDate,
+                    $update->updateId,
+                ));
 
                 $callbackResponse = $this->updateHandler->handle($update);
 
@@ -66,7 +78,6 @@ final class PolllingCommand extends Command
             }
         } catch (TelegramApiException $e) {
             if ($e->getCode() === 409) {
-                $io = new SymfonyStyle($input, $output);
                 $io->error('Can\'t use polling if webhook is active. Run "telegram:webhook:delete" command to delete the webhook first.');
                 return Command::FAILURE;
             }

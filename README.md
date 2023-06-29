@@ -40,7 +40,7 @@ telegram_bot:
   secret_token: CHANGE_ME
 ```
 
-### Configure webhook route
+### Optional. Configure webhook route
 ```yaml
 # config/routes.yaml
 
@@ -50,10 +50,20 @@ telegram_webhook:
     controller: telegram_bot.webhook_controller
 ```
 
-### Set webhook url
-Install webhook url using the console command:
+### Getting messages from telegram
+There are two ways to receive messages from Telegram:  
+#### Webhook. Recommended way.
+For this you need to configure webhook route and make it available from the Internet.  
+Send webhook url to Telegram with the command:  
 ``` bash
 $ bin/console telegram:webhook:set --url=https://domain.xyz/telagram-webhook
+```
+
+#### Polling daemon.  
+Use it in a development environment or if you can't provide public access to the webhook url.  
+Run the polling daemon with the command:  
+``` bash
+$ bin/console telegram:polling
 ```
 
 ## Example of usage
