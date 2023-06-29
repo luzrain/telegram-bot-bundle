@@ -48,8 +48,14 @@ final class WebhookInfoCommand extends Command
             return Command::SUCCESS;
         }
 
-        $io->writeln(sprintf("<comment>Webhook url:</comment>\t\t%s", $webhookInfo->url));
-        $io->writeln(sprintf("<comment>Max Connections:</comment>\t%s", $webhookInfo->maxConnections));
+        $allowedUpdates = $webhookInfo->allowedUpdates === null
+            ? 'All update types except chat_member'
+            : '[' . implode(',', $webhookInfo->allowedUpdates) . ']'
+        ;
+
+        $io->writeln(sprintf("<info>Webhook url:</info>\t\t%s", $webhookInfo->url));
+        $io->writeln(sprintf("<info>Max connections:</info>\t%s", $webhookInfo->maxConnections));
+        $io->writeln(sprintf("<info>Allowed updates:</info>\t%s", $allowedUpdates));
 
         return Command::SUCCESS;
     }

@@ -37,7 +37,9 @@ telegram_bot:
   # Bot api token
   api_token: API_TOKEN
   # Optional. Secret token to protect webhook endpoint from unauthenticated requests
-  secret_token: CHANGE_ME
+  #secret_token: CHANGE_ME
+  # Optional. List of the update types you want your bot to receive.
+  #allowed_updates: ['message','callback_query']
 ```
 
 ### Optional. Configure webhook route

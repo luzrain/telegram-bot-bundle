@@ -18,6 +18,8 @@ final class SetWebhookCommand extends Command
     public function __construct(
         private BotApi $botApi,
         private string|null $secretToken,
+        /** @var list<string> */
+        private array $allowedUpdates,
     ) {
         parent::__construct();
     }
@@ -54,6 +56,7 @@ final class SetWebhookCommand extends Command
             $this->botApi->call(new SetWebhook(
                 url: $url,
                 maxConnections: (int) $input->getOption('max-connections'),
+                allowedUpdates: $this->allowedUpdates,
                 secretToken: $this->secretToken,
             ));
         } catch (TelegramApiException $e) {

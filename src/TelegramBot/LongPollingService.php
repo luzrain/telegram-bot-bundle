@@ -17,6 +17,8 @@ final class LongPollingService
 
     public function __construct(
         private BotApi $botApi,
+        /** @var list<string> */
+        private array $allowedUpdates,
     ) {
     }
 
@@ -48,6 +50,7 @@ final class LongPollingService
                 offset: $this->offset,
                 limit: self::LIMIT,
                 timeout: $this->timeout,
+                allowedUpdates: $this->allowedUpdates,
             ));
         } catch (NetworkExceptionInterface) {
             return;

@@ -53,12 +53,14 @@ final class TelegramBotExtension extends Extension
         $container
             ->register('telegram_bot.long_polling_service', LongPollingService::class)
             ->setArgument('$botApi', new Reference(BotApi::class))
+            ->setArgument('$allowedUpdates', $config['allowed_updates'])
         ;
 
         $container
             ->register('telegram_bot.set_webhook_command', SetWebhookCommand::class)
             ->setArgument('$botApi', new Reference(BotApi::class))
             ->setArgument('$secretToken', $config['secret_token'])
+            ->setArgument('$allowedUpdates', $config['allowed_updates'])
             ->addTag('console.command')
         ;
 
