@@ -4,32 +4,34 @@ declare(strict_types=1);
 
 namespace Luzrain\TelegramBotBundle\TelegramBot;
 
-use Luzrain\TelegramBotApi\Method\SendMessage;
-use Luzrain\TelegramBotApi\Type\ForceReply;
-use Luzrain\TelegramBotApi\Type\InlineKeyboardMarkup;
-use Luzrain\TelegramBotApi\Type\ReplyKeyboardMarkup;
-use Luzrain\TelegramBotApi\Type\ReplyKeyboardRemove;
-use Luzrain\TelegramBotApi\Type\User;
+use Luzrain\TelegramBotApi\Method;
+use Luzrain\TelegramBotApi\Type;
 
 abstract class TelegramCommand
 {
-    protected readonly User|null $user;
+    protected readonly Type\User $user;
 
-    public function setUser(User|null $user): self
+    public function setUser(Type\User $user): void
     {
         /** @psalm-suppress InaccessibleProperty */
         $this->user = $user;
-
-        return $this;
     }
 
     protected function reply(
         string $text,
-        InlineKeyboardMarkup|ReplyKeyboardMarkup|ReplyKeyboardRemove|ForceReply|null $replyMarkup = null,
-    ): SendMessage {
-        return new SendMessage(
+        string|null $parseMode = null,
+        bool|null $disableWebPagePreview = null,
+        bool|null $disableNotification = null,
+        bool|null $protectContent = null,
+        Type\InlineKeyboardMarkup|Type\ReplyKeyboardMarkup|Type\ReplyKeyboardRemove|Type\ForceReply|null $replyMarkup = null,
+    ): Method\SendMessage {
+        return new Method\SendMessage(
             chatId: $this->user->id,
             text: $text,
+            parseMode: $parseMode,
+            disableWebPagePreview: $disableWebPagePreview,
+            disableNotification: $disableNotification,
+            protectContent: $protectContent,
             replyMarkup: $replyMarkup,
         );
     }

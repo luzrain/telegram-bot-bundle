@@ -15,16 +15,16 @@ final class WebHookHandler
     public function __construct(
         private ClientApi $client,
         private ServiceLocator $serviceLocator,
-        private array $controllersMap,
+        array $controllersMap,
     ) {
-        foreach ($this->controllersMap as ['event' => $event, 'value' => $value, 'controller' => $controller]) {
+        foreach ($controllersMap as ['event' => $event, 'value' => $value, 'controller' => $controller]) {
             $this->client->on($this->createClosure($event, $value, $controller));
         }
     }
 
     /**
-     * @param string $body json request
-     * @return string json response
+     * @param string $body raw json request
+     * @return string raw json response
      * @throws TelegramTypeException
      * @throws TelegramCallbackException
      * @throws \JsonException
