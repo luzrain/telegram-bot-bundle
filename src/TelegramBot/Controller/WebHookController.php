@@ -6,18 +6,20 @@ namespace Luzrain\TelegramBotBundle\TelegramBot\Controller;
 
 use Luzrain\TelegramBotApi\Exception\TelegramCallbackException;
 use Luzrain\TelegramBotApi\Exception\TelegramTypeException;
-use Luzrain\TelegramBotBundle\TelegramBot\WebHookHandler;
+use Luzrain\TelegramBotApi\Type\Update;
+use Luzrain\TelegramBotBundle\TelegramBot\UpdateHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 final class WebHookController extends AbstractController
 {
     public function __construct(
-        private WebHookHandler $webHookHandler,
+        private UpdateHandler $updateHandler,
         private string|null $secretToken,
     ) {
     }
@@ -25,7 +27,6 @@ final class WebHookController extends AbstractController
     /**
      * @throws TelegramTypeException
      * @throws TelegramCallbackException
-     * @throws \JsonException
      */
     public function __invoke(Request $request): Response
     {
@@ -37,11 +38,13 @@ final class WebHookController extends AbstractController
             throw new AccessDeniedHttpException('Access denied');
         }
 
-        $response = new JsonResponse(
-            data: $this->webHookHandler->run($request->getContent()),
-            json: true,
-        );
+        try {
+            $update = Update::fromJson($request->getContent());
+        } catch (TelegramTypeException $e) {
+            throw new BadRequestHttpException($e->getMessage());
+        }
 
+        $response = new JsonResponse($this->updateHandler->handle($update));
         $response->headers->set('Content-Length', (string) strlen((string) $response->getContent()));
 
         return $response;

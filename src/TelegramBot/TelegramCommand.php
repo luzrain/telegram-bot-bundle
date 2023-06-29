@@ -9,12 +9,16 @@ use Luzrain\TelegramBotApi\Type;
 
 abstract class TelegramCommand
 {
-    protected readonly Type\User $user;
+    private Type\User $user;
 
     public function setUser(Type\User $user): void
     {
-        /** @psalm-suppress InaccessibleProperty */
         $this->user = $user;
+    }
+
+    public function getUser(): Type\User
+    {
+        return $this->user;
     }
 
     protected function reply(
@@ -26,7 +30,7 @@ abstract class TelegramCommand
         Type\InlineKeyboardMarkup|Type\ReplyKeyboardMarkup|Type\ReplyKeyboardRemove|Type\ForceReply|null $replyMarkup = null,
     ): Method\SendMessage {
         return new Method\SendMessage(
-            chatId: $this->user->id,
+            chatId: $this->getUser()->id,
             text: $text,
             parseMode: $parseMode,
             disableWebPagePreview: $disableWebPagePreview,

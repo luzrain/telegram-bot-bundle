@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Luzrain\TelegramBotBundle\DependencyInjection;
 
-use Luzrain\TelegramBotBundle\TelegramBot\WebHookHandler;
+use Luzrain\TelegramBotBundle\TelegramBot\UpdateHandler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -37,7 +37,7 @@ final class CommandCompilerPass implements CompilerPassInterface
         ;
 
         $container
-            ->register('telegram_bot.webhook_handler', WebHookHandler::class)
+            ->register('telegram_bot.update_handler', UpdateHandler::class)
             ->setArgument('$client', new Reference('telegram_bot.client_api'))
             ->setArgument('$serviceLocator', new Reference('telegram_bot.controllers_locator'))
             ->setArgument('$controllersMap', $controllersMap)

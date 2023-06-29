@@ -10,9 +10,11 @@ use Luzrain\TelegramBotBundle\Attribute\OnCallback;
 use Luzrain\TelegramBotBundle\Attribute\OnCommand;
 use Luzrain\TelegramBotBundle\Attribute\OnEvent;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\DeleteWebhookCommand;
+use Luzrain\TelegramBotBundle\TelegramBot\Command\PolllingCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\SetWebhookCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\WebhookInfoCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Controller\WebHookController;
+use Luzrain\TelegramBotBundle\TelegramBot\LongPollingService;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -42,10 +44,15 @@ final class TelegramBotExtension extends Extension
 
         $container
             ->register('telegram_bot.webhook_controller', WebHookController::class)
-            ->setArgument('$webHookHandler', new Reference('telegram_bot.webhook_handler'))
+            ->setArgument('$updateHandler', new Reference('telegram_bot.update_handler'))
             ->setArgument('$secretToken', $config['secret_token'])
             ->addTag('controller.service_arguments')
             ->addMethodCall('setContainer', [new Reference('service_container')])
+        ;
+
+        $container
+            ->register('telegram_bot.long_polling_service', LongPollingService::class)
+            ->setArgument('$botApi', new Reference(BotApi::class))
         ;
 
         $container
@@ -63,6 +70,14 @@ final class TelegramBotExtension extends Extension
 
         $container
             ->register('telegram_bot.delete_webhook_command', DeleteWebhookCommand::class)
+            ->setArgument('$botApi', new Reference(BotApi::class))
+            ->addTag('console.command')
+        ;
+
+        $container
+            ->register('telegram_bot.polling_command', PolllingCommand::class)
+            ->setArgument('$longPollingService', new Reference('telegram_bot.long_polling_service'))
+            ->setArgument('$updateHandler', new Reference('telegram_bot.update_handler'))
             ->setArgument('$botApi', new Reference(BotApi::class))
             ->addTag('console.command')
         ;

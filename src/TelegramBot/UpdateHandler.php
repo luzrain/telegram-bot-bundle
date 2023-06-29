@@ -7,10 +7,11 @@ namespace Luzrain\TelegramBotBundle\TelegramBot;
 use Luzrain\TelegramBotApi\ClientApi;
 use Luzrain\TelegramBotApi\Event;
 use Luzrain\TelegramBotApi\Exception\TelegramCallbackException;
-use Luzrain\TelegramBotApi\Exception\TelegramTypeException;
+use Luzrain\TelegramBotApi\Method;
+use Luzrain\TelegramBotApi\Type\Update;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
-final class WebHookHandler
+final class UpdateHandler
 {
     public function __construct(
         private ClientApi $client,
@@ -23,15 +24,11 @@ final class WebHookHandler
     }
 
     /**
-     * @param string $body raw json request
-     * @return string raw json response
-     * @throws TelegramTypeException
      * @throws TelegramCallbackException
-     * @throws \JsonException
      */
-    public function run(string $body): string
+    public function handle(Update $update): Method|null
     {
-        return $this->client->webhookHandle($body);
+        return $this->client->handle($update);
     }
 
     /**
