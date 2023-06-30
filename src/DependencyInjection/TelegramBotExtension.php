@@ -10,7 +10,7 @@ use Luzrain\TelegramBotBundle\Attribute\OnCallback;
 use Luzrain\TelegramBotBundle\Attribute\OnCommand;
 use Luzrain\TelegramBotBundle\Attribute\OnEvent;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\DeleteWebhookCommand;
-use Luzrain\TelegramBotBundle\TelegramBot\Command\PolllingCommand;
+use Luzrain\TelegramBotBundle\TelegramBot\Command\PolllingStartCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\SetWebhookCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\WebhookInfoCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Controller\WebHookController;
@@ -77,7 +77,7 @@ final class TelegramBotExtension extends Extension
         ;
 
         $container
-            ->register('telegram_bot.polling_command', PolllingCommand::class)
+            ->register('telegram_bot.polling_command', PolllingStartCommand::class)
             ->setArgument('$longPollingService', new Reference('telegram_bot.long_polling_service'))
             ->setArgument('$updateHandler', new Reference('telegram_bot.update_handler'))
             ->setArgument('$botApi', new Reference(BotApi::class))
