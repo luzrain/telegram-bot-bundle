@@ -26,7 +26,7 @@ final class PolllingCommand extends Command
 
     public static function getDefaultName(): string
     {
-        return 'telegram:polling';
+        return 'telegram:polling:start';
     }
 
     public static function getDefaultDescription(): string

@@ -71,12 +71,6 @@ $rules = [
     // Removes @param, @return and @var tags that don’t provide any useful information.
     'no_superfluous_phpdoc_tags' => true,
 
-    // Allow single line anonymous class and closure.
-    'braces' => [
-        'allow_single_line_anonymous_class_with_empty_body' => true,
-        'allow_single_line_closure' => true,
-    ],
-
     // Multi-line arrays, arguments list, parameters list and match expressions must have a trailing comma.
     'trailing_comma_in_multiline' => [
         'after_heredoc' => true,

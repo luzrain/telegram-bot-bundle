@@ -28,18 +28,12 @@ return [
 # config/packages/telegram_bot.yaml
 
 telegram_bot:
-  # Psr\Http\Client\ClientInterface implementation
-  http_client: GuzzleHttp\ClientInterface
-  # Psr\Http\Message\RequestFactoryInterface implementation
-  request_factory: httpFactory
-  # Psr\Http\Message\StreamFactoryInterface implementation
-  stream_factory: httpFactory
-  # Bot api token
-  api_token: API_TOKEN
-  # Optional. Secret token to protect webhook endpoint from unauthenticated requests
-  #secret_token: CHANGE_ME
-  # Optional. List of the update types you want your bot to receive.
-  #allowed_updates: ['message','callback_query']
+  http_client: GuzzleHttp\ClientInterface      # Psr\Http\Client\ClientInterface implementation
+  request_factory: GuzzleHttp\Psr7\HttpFactory # Psr\Http\Message\RequestFactoryInterface implementation
+  stream_factory: GuzzleHttp\Psr7\HttpFactory  # Psr\Http\Message\StreamFactoryInterface implementation
+  api_token: API_TOKEN                         # Bot api token
+  #secret_token: CHANGE_ME                     # Optional. Secret token to protect webhook endpoint from unauthenticated requests (update webhook url after change)
+  #allowed_updates: ['message']                # Optional. List of the update types you want your bot to receive (update webhook url after change)
 ```
 
 ### Optional. Configure webhook route
@@ -65,7 +59,7 @@ $ bin/console telegram:webhook:set --url=https://domain.xyz/telagram-webhook
 Use it in a development environment or if you can't provide public access to the webhook url.  
 Run the polling daemon with the command:  
 ``` bash
-$ bin/console telegram:polling
+$ bin/console telegram:polling:start
 ```
 
 ## Example of usage
@@ -78,7 +72,7 @@ use Luzrain\TelegramBotBundle\TelegramBot\TelegramCommand;
 
 final class StartCommandController extends TelegramCommand
 {
-    // Be aware to set default values for arguments as they won't necessarily will be passed
+    // Be aware to set default values for command arguments as they won't necessarily will be passed
     #[OnCommand('/start')]
     public function __invoke(Type\Message $message, string $arg1 = '', string $arg2 = ''): Method
     {
@@ -94,7 +88,7 @@ use Luzrain\TelegramBotApi\Method;
 use Luzrain\TelegramBotApi\Type;
 use Luzrain\TelegramBotBundle\Attribute\OnEvent;
 
-// It's not necessary to extend TelegramCommand
+// It's not necessary to extend TelegramCommand at all
 final class OnMessageController
 {
     #[OnEvent(Event\Message::class)]
