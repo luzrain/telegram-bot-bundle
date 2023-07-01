@@ -29,6 +29,10 @@ final class CommandMetadataProvider
         return $list;
     }
 
+    /**
+     * @psalm-suppress PossiblyUndefinedArrayOffset
+     * @psalm-suppress ArgumentTypeCoercion
+     */
     private function instantiateAttribute(string $controller): OnCommand|null
     {
         [$class, $method] = explode('::', $controller, 2);
