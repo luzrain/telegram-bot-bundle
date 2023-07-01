@@ -9,7 +9,9 @@ use Luzrain\TelegramBotApi\ClientApi;
 use Luzrain\TelegramBotBundle\Attribute\OnCallback;
 use Luzrain\TelegramBotBundle\Attribute\OnCommand;
 use Luzrain\TelegramBotBundle\Attribute\OnEvent;
+use Luzrain\TelegramBotBundle\TelegramBot\Command\ButtonDeleteCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\DeleteWebhookCommand;
+use Luzrain\TelegramBotBundle\TelegramBot\Command\ButtonSetCommandsCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\PolllingStartCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\SetWebhookCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\WebhookInfoCommand;
@@ -84,6 +86,19 @@ final class TelegramBotExtension extends Extension
             ->addTag('console.command')
         ;
 
+        $container
+            ->register('telegram_bot.menu_button_set_commands', ButtonSetCommandsCommand::class)
+            ->setArgument('$botApi', new Reference(BotApi::class))
+            ->setArgument('$commandMetadataProvider', new Reference('telegram_bot.command_metadata_provider'))
+            ->addTag('console.command')
+        ;
+
+        $container
+            ->register('telegram_bot.menu_button_delete', ButtonDeleteCommand::class)
+            ->setArgument('$botApi', new Reference(BotApi::class))
+            ->addTag('console.command')
+        ;
+
         $container->registerAttributeForAutoconfiguration(OnEvent::class, $this->controllerConfigurate(...));
         $container->registerAttributeForAutoconfiguration(OnCommand::class, $this->controllerConfigurate(...));
         $container->registerAttributeForAutoconfiguration(OnCallback::class, $this->controllerConfigurate(...));
@@ -93,7 +108,7 @@ final class TelegramBotExtension extends Extension
     {
         $definition->addTag('telegram_bot.command', [
             'event' => $attribute->event,
-            'value' => $attribute->value,
+            'value' => $attribute->command ?? $attribute->callbackData ?? '',
             'controller' => $reflector->getDeclaringClass()->getName() . '::' . $reflector->getName(),
         ]);
     }

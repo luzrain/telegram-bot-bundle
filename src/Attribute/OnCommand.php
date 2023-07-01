@@ -10,11 +10,23 @@ use Luzrain\TelegramBotApi\Event\Command;
 final readonly class OnCommand
 {
     public string $event;
-    public string $value;
+    public string $command;
+    public string $description;
+    public bool $publish;
 
-    public function __construct(string $command)
+    public function __construct(string $command, string $description = '', bool $publish = false)
     {
         $this->event = Command::class;
-        $this->value = '/' . ltrim($command, '/');
+        $this->command = '/' . ltrim($command, '/');
+        $this->description = $description;
+        $this->publish = $publish;
+
+        if ($this->command === '/') {
+            throw new \InvalidArgumentException('Command can\'t be empty');
+        }
+
+        if ($this->publish === true && $this->description === '') {
+            throw new \InvalidArgumentException(sprintf('Description should be set for publish command "%s"', $this->command));
+        }
     }
 }

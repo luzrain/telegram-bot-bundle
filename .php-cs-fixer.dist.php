@@ -32,9 +32,6 @@ $rules = [
     // Unused use statements must be removed.
     'no_unused_imports' => true,
 
-    // Binary operators should be surrounded by space as configured.
-    'binary_operator_spaces' => true,
-
     // Scalar types should always be written in the same form. int not integer, bool not boolean, float not real or double.
     'phpdoc_scalar' => true,
 

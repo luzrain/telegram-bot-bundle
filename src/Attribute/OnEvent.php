@@ -10,15 +10,13 @@ use Luzrain\TelegramBotApi\Event;
 final readonly class OnEvent
 {
     public string $event;
-    public string $value;
 
     public function __construct(string $event)
     {
-        if (!is_subclass_of($event, Event::class)) {
-            throw new \InvalidArgumentException(sprintf('event should implement %s', Event::class));
-        }
-
         $this->event = $event;
-        $this->value = '';
+
+        if (!is_subclass_of($event, Event::class)) {
+            throw new \InvalidArgumentException(sprintf('Event should implement %s', Event::class));
+        }
     }
 }

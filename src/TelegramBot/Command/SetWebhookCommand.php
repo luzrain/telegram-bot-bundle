@@ -36,13 +36,19 @@ final class SetWebhookCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption('url', null, InputOption::VALUE_REQUIRED, 'Webhook url', '');
+        $this->addOption('url', null, InputOption::VALUE_REQUIRED, 'Webhook url');
         $this->addOption('max-connections', null, InputOption::VALUE_REQUIRED, 'Max connections', 40);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+
+        if ($input->getOption('url') === null) {
+            $io->error('You should provide "--url" option');
+
+            return Command::FAILURE;
+        }
 
         try {
             $url = $this->urlValidate($input->getOption('url'));
@@ -65,7 +71,7 @@ final class SetWebhookCommand extends Command
             return Command::FAILURE;
         }
 
-        $io->success('Webhook url set to: ' . $url);
+        $io->success(sprintf('Webhook url set to "%s"', $url));
 
         return Command::SUCCESS;
     }

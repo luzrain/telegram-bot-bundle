@@ -41,7 +41,7 @@ final class WebHookController extends AbstractController
         try {
             $update = Update::fromJson($request->getContent());
         } catch (TelegramTypeException $e) {
-            throw new BadRequestHttpException($e->getMessage());
+            throw new BadRequestHttpException($e->getMessage(), $e);
         }
 
         $response = new JsonResponse($this->updateHandler->handle($update));

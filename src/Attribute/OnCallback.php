@@ -11,11 +11,11 @@ use Luzrain\TelegramBotApi\Event\NamedCallbackQuery;
 final readonly class OnCallback
 {
     public string $event;
-    public string $value;
+    public string $callbackData;
 
-    public function __construct(string|null $callbackData = null)
+    public function __construct(string $callbackData = '')
     {
-        $this->event = $callbackData === null ? CallbackQuery::class : NamedCallbackQuery::class;
-        $this->value = $callbackData ?? '';
+        $this->event = $callbackData === '' ? CallbackQuery::class : NamedCallbackQuery::class;
+        $this->callbackData = $callbackData;
     }
 }
