@@ -39,8 +39,8 @@ final class CommandCompilerPass implements CompilerPassInterface
         // Sort by priority
         usort($controllersMap, fn (array $a, array $b) => $b['priority'] <=> $a['priority']);
 
-        foreach ($controllersMap as &$row) {
-            unset($row['priority']);
+        foreach ($controllersMap as $id => $row) {
+            unset($controllersMap[$id]['priority']);
         }
 
         $container

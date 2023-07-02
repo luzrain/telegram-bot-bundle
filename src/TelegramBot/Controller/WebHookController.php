@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Luzrain\TelegramBotBundle\TelegramBot\Controller;
 
-use Luzrain\TelegramBotApi\Exception\TelegramCallbackException;
 use Luzrain\TelegramBotApi\Exception\TelegramTypeException;
 use Luzrain\TelegramBotApi\Type\Update;
 use Luzrain\TelegramBotBundle\TelegramBot\UpdateHandler;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +14,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
-final class WebHookController extends AbstractController
+final class WebHookController
 {
     public function __construct(
         private UpdateHandler $updateHandler,
@@ -24,10 +22,6 @@ final class WebHookController extends AbstractController
     ) {
     }
 
-    /**
-     * @throws TelegramTypeException
-     * @throws TelegramCallbackException
-     */
     public function __invoke(Request $request): Response
     {
         if ($request->getMethod() !== 'POST') {

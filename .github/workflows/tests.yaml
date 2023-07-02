@@ -29,3 +29,6 @@ jobs:
 
       - name: Psalm
         run: vendor/bin/psalm --no-cache
+
+      - name: Tests
+        run: vendor/bin/phpunit

@@ -41,7 +41,7 @@ final class TelegramBotExtension extends Extension
         ;
 
         $container
-            ->autowire('telegram_bot.client_api', ClientApi::class)
+            ->register('telegram_bot.client_api', ClientApi::class)
         ;
 
         $container
@@ -49,7 +49,6 @@ final class TelegramBotExtension extends Extension
             ->setArgument('$updateHandler', new Reference('telegram_bot.update_handler'))
             ->setArgument('$secretToken', $config['secret_token'])
             ->addTag('controller.service_arguments')
-            ->addMethodCall('setContainer', [new Reference('service_container')])
         ;
 
         $container
