@@ -110,6 +110,7 @@ final class TelegramBotExtension extends Extension
             'event' => $attribute->event,
             'value' => $attribute->command ?? $attribute->callbackData ?? '',
             'controller' => $reflector->getDeclaringClass()->getName() . '::' . $reflector->getName(),
+            'priority' => $attribute->priority,
         ]);
     }
 

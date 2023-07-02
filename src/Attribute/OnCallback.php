@@ -12,10 +12,12 @@ final readonly class OnCallback
 {
     public string $event;
     public string $callbackData;
+    public int $priority;
 
-    public function __construct(string $callbackData = '')
+    public function __construct(string $callbackData = '', int $priority = 0)
     {
         $this->event = $callbackData === '' ? CallbackQuery::class : NamedCallbackQuery::class;
         $this->callbackData = $callbackData;
+        $this->priority = $priority;
     }
 }

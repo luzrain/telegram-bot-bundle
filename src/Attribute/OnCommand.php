@@ -13,13 +13,15 @@ final readonly class OnCommand
     public string $command;
     public string $description;
     public bool $publish;
+    public int $priority;
 
-    public function __construct(string $command, string $description = '', bool $publish = false)
+    public function __construct(string $command, string $description = '', bool $publish = false, int $priority = 0)
     {
         $this->event = Command::class;
         $this->command = '/' . ltrim($command, '/');
         $this->description = $description;
         $this->publish = $publish;
+        $this->priority = $priority;
 
         if ($this->command === '/') {
             throw new \InvalidArgumentException('Command can\'t be empty');

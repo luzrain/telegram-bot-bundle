@@ -19,8 +19,7 @@ final class CommandCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $controllers = $container->findTaggedServiceIds('telegram_bot.command');
-        $controllerServiceClasses = array_keys($controllers);
-        $controllersLocatorMap = iterator_to_array($this->locatorReferenceMap($controllerServiceClasses));
+        $controllersLocatorMap = iterator_to_array($this->locatorReferenceMap(array_keys($controllers)));
 
         $controllersMap = [];
         foreach ($controllers as $attributeEntries) {
@@ -29,12 +28,20 @@ final class CommandCompilerPass implements CompilerPassInterface
                     'event' => $attributeEntry['event'],
                     'value' => $attributeEntry['value'],
                     'controller' => $attributeEntry['controller'],
+                    'priority' => $attributeEntry['priority'],
                 ];
             }
         }
 
-        // Commands should be first by default
-        usort($controllersMap, fn (array $a, array $b) => $a['value'] === '' ? 1 : -1);
+        // Commands have the highest priority by default
+        usort($controllersMap, fn (array $a, array $b) => str_starts_with($a['value'], '/') ? -1 : 1);
+
+        // Sort by priority
+        usort($controllersMap, fn (array $a, array $b) => $b['priority'] <=> $a['priority']);
+
+        foreach ($controllersMap as &$row) {
+            unset($row['priority']);
+        }
 
         $container
             ->register('telegram_bot.controllers_locator', ServiceLocator::class)

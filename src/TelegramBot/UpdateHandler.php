@@ -55,8 +55,20 @@ final class UpdateHandler
         [$service, $method] = explode('::', $controller, 2);
         $controllerService = $this->serviceLocator->get($service);
 
-        if ($controllerService instanceof TelegramCommand && isset($update->from)) {
-            $controllerService->setUser($update->from);
+        if ($update instanceof Update) {
+            $user = null;
+            foreach ($update as $updateItem) {
+                if (isset($updateItem->from)) {
+                    $user = $updateItem->from;
+                    break;
+                }
+            }
+        } else {
+            $user = $update->from ?? null;
+        }
+
+        if ($controllerService instanceof TelegramCommand && $user !== null) {
+            $controllerService->setUser($user);
         }
 
         return $controllerService->$method($update, ...$params);
