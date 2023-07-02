@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Luzrain\TelegramBotBundle\TelegramBot;
 
+use Luzrain\TelegramBotApi\EventCallbackReturn;
 use Luzrain\TelegramBotApi\Method;
 use Luzrain\TelegramBotApi\Type;
 
@@ -38,5 +39,15 @@ abstract class TelegramCommand
             protectContent: $protectContent,
             replyMarkup: $replyMarkup,
         );
+    }
+
+    protected function stop(): EventCallbackReturn
+    {
+        return EventCallbackReturn::STOP;
+    }
+
+    protected function continue(): EventCallbackReturn
+    {
+        return EventCallbackReturn::CONTINUE;
     }
 }
