@@ -96,8 +96,72 @@ final class OnMessageController
     {
         return new Method\SendMessage(
             chatId: $message->from->id,
-            text: 'You write: ' . $message->text,
+            text: 'You wrote: ' . $message->text,
         );
+    }
+}
+```
+
+### Access control controller
+```php
+use Luzrain\TelegramBotApi\Event;
+use Luzrain\TelegramBotApi\EventCallbackReturn;
+use Luzrain\TelegramBotApi\Type;
+use Luzrain\TelegramBotBundle\Attribute\OnEvent;
+use Luzrain\TelegramBotBundle\TelegramBot\TelegramCommand;
+
+final class AccessControlController extends TelegramCommand
+{
+    // Set the highest priority to ensure that this method is executed before any others.
+    #[OnEvent(Event\Update::class, priority: 10)]
+    public function __invoke(Type\Update $update): EventCallbackReturn
+    {
+        // Stop executing other controllers if the sender doesn't meet some conditions
+        if ($update->message?->from->id !== 123456789) {
+            return $this->stop();
+        }
+
+        return $this->continue();
+    }
+}
+```
+
+### Publish list of command as bot button
+It's possible to publish all your commands that will be shown as list of available commands in the bot's menu button.
+To do this fill in the _description_ field and the _publish_ flag in the OnCommand attribute, and run the command.
+``` bash
+$ bin/console telegram:button:setcommands
+```
+
+For button delete.
+``` bash
+$ bin/console telegram:button:delete
+```
+
+```php
+use Luzrain\TelegramBotApi\Method;
+use Luzrain\TelegramBotApi\Type;
+use Luzrain\TelegramBotBundle\Attribute\OnCommand;
+use Luzrain\TelegramBotBundle\TelegramBot\TelegramCommand;
+
+final class CommandsController extends TelegramCommand
+{
+    #[OnCommand(command: '/command1', description: 'Test command 1', publish: true)]
+    public function __invoke(Type\Message $message): Method
+    {
+        return $this->reply('Command 1 response');
+    }
+
+    #[OnCommand(command: '/command2', description: 'Test command 2', publish: true)]
+    public function __invoke(Type\Message $message): Method
+    {
+        return $this->reply('Command 2 response');
+    }
+
+    #[OnCommand(command: '/command3', description: 'This command will not be published', publish: false)]
+    public function __invoke(Type\Message $message): Method
+    {
+        return $this->reply('Command 3 response');
     }
 }
 ```

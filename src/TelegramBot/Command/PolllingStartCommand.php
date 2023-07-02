@@ -36,7 +36,7 @@ final class PolllingStartCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption('timeout', null, InputOption::VALUE_REQUIRED, 'Timeout for long polling connection in seconds', 15);
+        $this->addOption('timeout', 't', InputOption::VALUE_REQUIRED, 'Timeout for long polling connection in seconds', 15);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -63,6 +63,10 @@ final class PolllingStartCommand extends Command
                 ));
 
                 $callbackResponse = $this->updateHandler->handle($update);
+
+                if ($callbackResponse === null) {
+                    continue;
+                }
 
                 try {
                     $this->botApi->call($callbackResponse);
