@@ -42,8 +42,8 @@ telegram_bot:
 
 # ...
 telegram_webhook:
-    path: /telagram-webhook
-    controller: telegram_bot.webhook_controller
+  path: /telagram-webhook
+  controller: telegram_bot.webhook_controller
 ```
 
 ### Getting messages from telegram
