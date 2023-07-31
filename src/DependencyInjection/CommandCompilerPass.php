@@ -16,7 +16,7 @@ final class CommandCompilerPass implements CompilerPassInterface
     /**
      * @psalm-suppress ArgumentTypeCoercion
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $controllers = $container->findTaggedServiceIds('telegram_bot.command');
         $controllersLocatorMap = iterator_to_array($this->locatorReferenceMap(array_keys($controllers)));
