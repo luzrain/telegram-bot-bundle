@@ -1,5 +1,4 @@
 # Symfony bundle for Telegram Bot API
-
 [![PHP ^8.2](https://img.shields.io/badge/PHP-^8.2-777bb3.svg?style=flat)](https://www.php.net/releases/8.2/en.php)
 ![Symfony ^6.3](https://img.shields.io/badge/Symfony-^6.3-374151.svg?style=flat)
 [![Tests Status](https://img.shields.io/github/actions/workflow/status/luzrain/telegram-bot-bundle/tests.yaml?branch=master)](../../actions/workflows/tests.yaml)
@@ -8,7 +7,7 @@ A symfony bundle for [luzrain/telegram-bot-api](https://github.com/luzrain/teleg
 
 ## Installation
 ### Install composer package
-``` bash
+```bash
 $ composer require luzrain/telegram-bot-bundle
 ```
 
