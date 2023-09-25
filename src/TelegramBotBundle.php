@@ -14,8 +14,6 @@ final class TelegramBotBundle extends Bundle
 {
     public function build(ContainerBuilder $container): void
     {
-        parent::build($container);
-
         $container->addCompilerPass(new CommandCompilerPass());
     }
 

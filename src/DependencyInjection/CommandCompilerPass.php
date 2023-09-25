@@ -19,7 +19,6 @@ final class CommandCompilerPass implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
         $controllers = $container->findTaggedServiceIds('telegram_bot.command');
-        $controllersLocatorMap = iterator_to_array($this->locatorReferenceMap(array_keys($controllers)));
 
         $controllersMap = [];
         foreach ($controllers as $attributeEntries) {
@@ -45,7 +44,7 @@ final class CommandCompilerPass implements CompilerPassInterface
 
         $container
             ->register('telegram_bot.controllers_locator', ServiceLocator::class)
-            ->setArguments([$controllersLocatorMap])
+            ->setArguments([$this->referenceMap(array_keys($controllers))])
             ->addTag('container.service_locator')
         ;
 
@@ -62,14 +61,12 @@ final class CommandCompilerPass implements CompilerPassInterface
         ;
     }
 
-    /**
-     * @param list<class-string> $serviceClasses
-     * @return \Generator<class-string, Reference>
-     */
-    private function locatorReferenceMap(array $serviceClasses): \Generator
+    private function referenceMap(array $serviceClasses): array
     {
+        $result = [];
         foreach ($serviceClasses as $serviceClass) {
-            yield $serviceClass => new Reference($serviceClass);
+            $result[$serviceClass] = new Reference($serviceClass);
         }
+        return $result;
     }
 }
