@@ -14,19 +14,16 @@ final class CommandMetadataProvider
     }
 
     /**
-     * @return list<OnCommand>
+     * @return \Generator<OnCommand>
      */
-    public function gelMetadataList(): array
+    public function gelMetadataList(): \Generator
     {
-        $list = [];
         foreach ($this->controllersMap as ['controller' => $controller]) {
             $command = $this->instantiateAttribute($controller);
             if ($command !== null) {
-                $list[] = $command;
+                yield $command;
             }
         }
-
-        return $list;
     }
 
     /**

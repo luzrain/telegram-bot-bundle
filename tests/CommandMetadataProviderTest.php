@@ -27,8 +27,9 @@ final class CommandMetadataProviderTest extends KernelTestCase
 {
     public function testCommandsMetadata(): void
     {
+        /** @var CommandMetadataProvider $commandMetadataProvider */
         $commandMetadataProvider = self::getContainer()->get('telegram_bot.command_metadata_provider');
-        $list = $commandMetadataProvider->gelMetadataList();
+        $list = iterator_to_array($commandMetadataProvider->gelMetadataList());
 
         $this->assertCount(4, $list);
         $this->assertObjectInArray(new OnCommand('/start', '', false, 0), $list);
@@ -37,8 +38,8 @@ final class CommandMetadataProviderTest extends KernelTestCase
         $this->assertObjectInArray(new OnCommand('/test3', 'test3 command description', false, 0), $list);
     }
 
-    private function assertObjectInArray(object $obj, array $arra): void
+    private function assertObjectInArray(object $obj, array $array): void
     {
-        $this->assertContains(json_encode($obj), array_map(fn ($a) => json_encode($a), $arra));
+        $this->assertContains(json_encode($obj), array_map(fn ($a) => json_encode($a), $array));
     }
 }

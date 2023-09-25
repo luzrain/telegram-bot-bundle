@@ -49,7 +49,7 @@ final class ButtonSetCommandsCommand extends Command
         }
 
         if ($commands === []) {
-            $io->warning('Could not find publish commands');
+            $io->warning('Could not find any commands to publish');
 
             return Command::SUCCESS;
         }
@@ -67,7 +67,7 @@ final class ButtonSetCommandsCommand extends Command
             return Command::FAILURE;
         }
 
-        $io->success('Bot\'s menu button set');
+        $io->success('Bot\'s menu button has been set');
 
         return Command::SUCCESS;
     }

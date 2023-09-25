@@ -12,6 +12,7 @@ use Psr\Http\Client\NetworkExceptionInterface;
 final class LongPollingService
 {
     private const LIMIT = 50;
+
     private int $timeout = 15;
     private int $offset = 0;
 
