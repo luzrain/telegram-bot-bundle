@@ -16,6 +16,7 @@ use Luzrain\TelegramBotBundle\TelegramBot\Command\PolllingStartCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\SetWebhookCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\WebhookInfoCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Controller\WebHookController;
+use Luzrain\TelegramBotBundle\TelegramBot\DummyDescriptionProcessor;
 use Luzrain\TelegramBotBundle\TelegramBot\LongPollingService;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -89,13 +90,18 @@ final class TelegramBotExtension extends Extension
             ->register('telegram_bot.menu_button_set_commands', ButtonSetCommandsCommand::class)
             ->setArgument('$botApi', new Reference(BotApi::class))
             ->setArgument('$commandMetadataProvider', new Reference('telegram_bot.command_metadata_provider'))
+            ->setArgument('$descriptionProcessor', new Reference('telegram_bot.description_processor'))
             ->addTag('console.command')
         ;
 
         $container
-            ->register('telegram_bot.menu_button_delete', ButtonDeleteCommand::class)
+            ->register('telegram_bot.menu_button_delete_command', ButtonDeleteCommand::class)
             ->setArgument('$botApi', new Reference(BotApi::class))
             ->addTag('console.command')
+        ;
+
+        $container
+            ->register('telegram_bot.description_processor', DummyDescriptionProcessor::class)
         ;
 
         $container->registerAttributeForAutoconfiguration(OnEvent::class, $this->controllerConfigurate(...));
