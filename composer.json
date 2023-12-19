@@ -14,15 +14,15 @@
     "require": {
         "php": ">=8.2",
         "luzrain/telegram-bot-api": "^2.1.1",
-        "symfony/config": ">=6.3",
-        "symfony/console": ">=6.3",
-        "symfony/dependency-injection": ">=6.3",
-        "symfony/http-kernel": ">=6.3"
+        "symfony/config": "^6.3|^7.0",
+        "symfony/console": "^6.3|^7.0",
+        "symfony/dependency-injection": "^6.3|^7.0",
+        "symfony/http-kernel": "^6.3|^7.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.20",
         "phpunit/phpunit": "^10.2",
-        "symfony/framework-bundle": ">=6.3",
+        "symfony/framework-bundle": "^7.0",
         "vimeo/psalm": "^5.13"
     },
     "autoload": {
