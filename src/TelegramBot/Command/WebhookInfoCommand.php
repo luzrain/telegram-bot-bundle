@@ -49,7 +49,7 @@ final class WebhookInfoCommand extends Command
         }
 
         $allowedUpdates = $webhookInfo->allowedUpdates === null
-            ? 'All update types except chat_member'
+            ? 'All update types'
             : '[' . implode(',', $webhookInfo->allowedUpdates) . ']'
         ;
 

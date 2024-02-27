@@ -25,6 +25,7 @@ abstract class TelegramCommand
     protected function reply(
         string $text,
         string|null $parseMode = null,
+        /** @deprecated */
         bool|null $disableWebPagePreview = null,
         bool|null $disableNotification = null,
         bool|null $protectContent = null,
@@ -34,7 +35,6 @@ abstract class TelegramCommand
             chatId: $this->getUser()->id,
             text: $text,
             parseMode: $parseMode,
-            disableWebPagePreview: $disableWebPagePreview,
             disableNotification: $disableNotification,
             protectContent: $protectContent,
             replyMarkup: $replyMarkup,

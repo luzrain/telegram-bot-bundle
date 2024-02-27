@@ -43,10 +43,10 @@ final class Configuration implements ConfigurationInterface
                     ->always(fn ($values) => array_map(strval(...), $values))
                     ->end()
                     ->validate()
-                    ->ifTrue(fn ($configArray) => array_diff($configArray, $this->getAllowedUpdates()) !== [])
+                    ->ifTrue(fn ($configArray) => array_diff($configArray, Update::getUpdateTypes()) !== [])
                     ->then(function ($configArray) {
-                        if (array_diff($configArray, $this->getAllowedUpdates()) !== []) {
-                            $allowedKeys = implode(', ', $this->getAllowedUpdates());
+                        if (array_diff($configArray, Update::getUpdateTypes()) !== []) {
+                            $allowedKeys = implode(', ', Update::getUpdateTypes());
                             throw new \InvalidArgumentException(sprintf('Invalid updates list. Allowed updates: %s', $allowedKeys));
                         }
                         return $configArray;
@@ -56,28 +56,5 @@ final class Configuration implements ConfigurationInterface
         ->end();
 
         return $treeBuilder;
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function getAllowedUpdates(): array
-    {
-        return [
-            Update::MESSAGE_TYPE,
-            Update::EDITED_MESSAGE_TYPE,
-            Update::CHANNEL_POST_TYPE,
-            Update::EDITED_CHANNEL_POST_TYPE,
-            Update::INLINE_QUERY_TYPE,
-            Update::CHOSEN_INLINE_RESULT_TYPE,
-            Update::CALLBACK_QUERY_TYPE,
-            Update::SHIPPING_QUERY_TYPE,
-            Update::PRE_CHECKOUT_QUERY_TYPE,
-            Update::POLL_TYPE,
-            Update::POLL_ANSWER_TYPE,
-            Update::MY_CHAT_MEMBER_TYPE,
-            Update::CHAT_MEMBER_TYPE,
-            Update::CHAT_JOIN_REQUEST_TYPE,
-        ];
     }
 }
