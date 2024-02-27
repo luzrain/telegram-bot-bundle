@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace Luzrain\TelegramBotBundle\DependencyInjection;
-
 use Luzrain\TelegramBotBundle\TelegramBot\CommandMetadataProvider;
 use Luzrain\TelegramBotBundle\TelegramBot\UpdateHandler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -11,11 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
-final class CommandCompilerPass implements CompilerPassInterface
-{
-    /**
-     * @psalm-suppress ArgumentTypeCoercion
-     */
+return new class () implements CompilerPassInterface {
     public function process(ContainerBuilder $container): void
     {
         $controllers = $container->findTaggedServiceIds('telegram_bot.command');
@@ -69,4 +63,4 @@ final class CommandCompilerPass implements CompilerPassInterface
         }
         return $result;
     }
-}
+};
