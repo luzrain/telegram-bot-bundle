@@ -19,6 +19,7 @@ final class LongPollingService
 
     public function __construct(
         private BotApi $botApi,
+        /** @var list<string> */
         private array $allowedUpdates,
     ) {
     }

@@ -18,6 +18,7 @@ final class SetWebhookCommand extends Command
 {
     public function __construct(
         private BotApi $botApi,
+        /** @var list<string> */
         private array $allowedUpdates,
         private string|null $webhookUrl,
         private int|null $maxConnections,
