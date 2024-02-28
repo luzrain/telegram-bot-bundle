@@ -11,15 +11,15 @@ use Luzrain\TelegramBotApi\Method;
 use Luzrain\TelegramBotApi\Type\Update;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
-final class UpdateHandler
+final readonly class UpdateHandler
 {
     public function __construct(
         private ClientApi $client,
         private ServiceLocator $serviceLocator,
         array $controllersMap,
     ) {
-        foreach ($controllersMap as ['event' => $event, 'value' => $value, 'controller' => $controller]) {
-            $this->client->on($this->createClosure($event, $value, $controller));
+        foreach ($controllersMap as ['event' => $eventClass, 'value' => $value, 'controller' => $controller]) {
+            $this->client->on($this->createEvent($eventClass, $value, $controller));
         }
     }
 
@@ -34,13 +34,13 @@ final class UpdateHandler
     /**
      * @param class-string<Event> $event
      */
-    private function createClosure(string $event, string $value, string $controller): Event
+    private function createEvent(string $event, string $value, string $controller): Event
     {
         return match ($event) {
             Event\Command::class => new $event($value, function (object $update, string ...$params) use ($controller) {
                 return $this->runController($controller, $update, $params);
             }),
-            Event\NamedCallbackQuery::class => new $event($value, function (object $update) use ($controller) {
+            Event\CallbackDataQuery::class => new $event($value, function (object $update) use ($controller) {
                 return $this->runController($controller, $update);
             }),
             default => new $event(function (object $update) use ($controller) {

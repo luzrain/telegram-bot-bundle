@@ -27,10 +27,10 @@ return new class () implements CompilerPassInterface {
         }
 
         // Commands have the highest priority by default
-        usort($controllersMap, fn (array $a, array $b) => str_starts_with($a['value'], '/') ? -1 : 1);
+        \usort($controllersMap, fn (array $a, array $b) => \str_starts_with($a['value'], '/') ? -1 : 1);
 
         // Sort by priority
-        usort($controllersMap, fn (array $a, array $b) => $b['priority'] <=> $a['priority']);
+        \usort($controllersMap, fn (array $a, array $b) => $b['priority'] <=> $a['priority']);
 
         foreach ($controllersMap as $id => $row) {
             unset($controllersMap[$id]['priority']);
@@ -38,21 +38,20 @@ return new class () implements CompilerPassInterface {
 
         $container
             ->register('telegram_bot.controllers_locator', ServiceLocator::class)
-            ->setArguments([$this->referenceMap(array_keys($controllers))])
-            ->addTag('container.service_locator')
-        ;
+            ->setArguments([$this->referenceMap(\array_keys($controllers))])
+            ->addTag('container.service_locator');
 
         $container
             ->register('telegram_bot.update_handler', UpdateHandler::class)
-            ->setArgument('$client', new Reference('telegram_bot.client_api'))
-            ->setArgument('$serviceLocator', new Reference('telegram_bot.controllers_locator'))
-            ->setArgument('$controllersMap', $controllersMap)
-        ;
+            ->setArguments([
+                new Reference('telegram_bot.client_api'),
+                new Reference('telegram_bot.controllers_locator'),
+                $controllersMap,
+            ]);
 
         $container
             ->register('telegram_bot.command_metadata_provider', CommandMetadataProvider::class)
-            ->setArgument('$controllersMap', $controllersMap)
-        ;
+            ->setArguments([$controllersMap]);
     }
 
     private function referenceMap(array $serviceClasses): array
