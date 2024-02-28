@@ -27,7 +27,7 @@ final class ButtonSetCommandsCommand extends Command
 
     public static function getDefaultName(): string
     {
-        return 'telegram:button:setcommands';
+        return 'telegram:button:update';
     }
 
     public static function getDefaultDescription(): string

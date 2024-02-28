@@ -55,7 +55,7 @@ There are two ways to receive messages from Telegram.
 For this you need to configure webhook route and make it available from the Internet.  
 Send webhook url to Telegram with the command:  
 ``` bash
-$ bin/console telegram:webhook:set --url=https://domain.xyz/telagram-webhook
+$ bin/console telegram:webhook:update
 ```
 
 #### Polling daemon.  
@@ -133,7 +133,7 @@ final class AccessControlController extends TelegramCommand
 It's possible to publish all your commands that will be shown as list of available commands in the bot's menu button.
 To do this fill in the _description_ field and the _publish_ flag in the OnCommand attribute, and run the command.
 ``` bash
-$ bin/console telegram:button:setcommands
+$ bin/console telegram:button:update
 ```
 
 For button delete.
