@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class SetWebhookCommand extends Command
+final class WebhookUpdateCommand extends Command
 {
     public function __construct(
         private BotApi $botApi,

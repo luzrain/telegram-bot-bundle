@@ -8,10 +8,10 @@ use Luzrain\TelegramBotBundle\Attribute\OnCallback;
 use Luzrain\TelegramBotBundle\Attribute\OnCommand;
 use Luzrain\TelegramBotBundle\Attribute\OnEvent;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\ButtonDeleteCommand;
-use Luzrain\TelegramBotBundle\TelegramBot\Command\ButtonSetCommandsCommand;
-use Luzrain\TelegramBotBundle\TelegramBot\Command\DeleteWebhookCommand;
+use Luzrain\TelegramBotBundle\TelegramBot\Command\ButtonUpdateCommand;
+use Luzrain\TelegramBotBundle\TelegramBot\Command\WebhookDeleteCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\PolllingStartCommand;
-use Luzrain\TelegramBotBundle\TelegramBot\Command\SetWebhookCommand;
+use Luzrain\TelegramBotBundle\TelegramBot\Command\WebhookUpdateCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\WebhookInfoCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Controller\WebHookController;
 use Luzrain\TelegramBotBundle\TelegramBot\DummyDescriptionProcessor;
@@ -53,7 +53,7 @@ return static function (array $config, ContainerBuilder $container) {
     ;
 
     $container
-        ->register('telegram_bot.set_webhook_command', SetWebhookCommand::class)
+        ->register('telegram_bot.set_webhook_command', WebhookUpdateCommand::class)
         ->addTag('console.command')
         ->setArguments([
             new Reference(BotApi::class),
@@ -72,7 +72,7 @@ return static function (array $config, ContainerBuilder $container) {
     ;
 
     $container
-        ->register('telegram_bot.delete_webhook_command', DeleteWebhookCommand::class)
+        ->register('telegram_bot.delete_webhook_command', WebhookDeleteCommand::class)
         ->addTag('console.command')
         ->setArguments([new Reference(BotApi::class)])
     ;
@@ -89,7 +89,7 @@ return static function (array $config, ContainerBuilder $container) {
     ;
 
     $container
-        ->register('telegram_bot.menu_button_set_commands', ButtonSetCommandsCommand::class)
+        ->register('telegram_bot.menu_button_set_commands', ButtonUpdateCommand::class)
         ->addTag('console.command')
         ->setArguments([
             new Reference(BotApi::class),
