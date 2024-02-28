@@ -6,7 +6,7 @@ namespace Luzrain\TelegramBotBundle\Attribute;
 
 use Luzrain\TelegramBotApi\Event;
 
-#[\Attribute(\Attribute::TARGET_METHOD)]
+#[\Attribute(\Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
 final readonly class OnEvent
 {
     public string $event;
