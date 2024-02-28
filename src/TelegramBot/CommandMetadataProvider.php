@@ -8,6 +8,8 @@ use Luzrain\TelegramBotBundle\Attribute\OnCommand;
 
 final class CommandMetadataProvider
 {
+    private array $controllerClassMap = [];
+
     public function __construct(
         private array $controllersMap,
     ) {
@@ -19,24 +21,33 @@ final class CommandMetadataProvider
     public function gelMetadataList(): \Generator
     {
         foreach ($this->controllersMap as ['controller' => $controller]) {
-            $command = $this->instantiateAttribute($controller);
-            if ($command !== null) {
-                yield $command;
+            foreach ($this->instantiateAttributes($controller) as $attrubute) {
+                yield $attrubute;
             }
         }
+
+        $this->controllerClassMap[] = [];
     }
 
     /**
      * @psalm-suppress PossiblyUndefinedArrayOffset
      * @psalm-suppress ArgumentTypeCoercion
      */
-    private function instantiateAttribute(string $controller): OnCommand|null
+    private function instantiateAttributes(string $controller): \Generator
     {
         [$class, $method] = \explode('::', $controller, 2);
+
+        if (isset($this->controllerClassMap[$class])) {
+            return;
+        }
+
+        $this->controllerClassMap[$class] = true;
         $reflClass = new \ReflectionClass($class);
         $reflMethod = $reflClass->getMethod($method);
-        $reflAttribute = $reflMethod->getAttributes(OnCommand::class)[0] ?? null;
+        $attributes = $reflMethod->getAttributes(OnCommand::class);
 
-        return $reflAttribute?->newInstance();
+        foreach ($attributes as $attribute) {
+            yield $attribute->newInstance();
+        }
     }
 }
