@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Luzrain\TelegramBotBundle\Test;
 
 use Luzrain\TelegramBotBundle\Attribute\OnCommand;
-use Luzrain\TelegramBotBundle\TelegramBot\CommandMetadataProvider;
+use Luzrain\TelegramBotBundle\CommandMetadataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 final class CommandMetadataProviderTest extends KernelTestCase

@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Luzrain\TelegramBotBundle\TelegramBot\Command;
+namespace Luzrain\TelegramBotBundle\Command;
 
 use Luzrain\TelegramBotApi\BotApi;
 use Luzrain\TelegramBotApi\Exception\TelegramApiException;
 use Luzrain\TelegramBotApi\Method;
+use Luzrain\TelegramBotApi\Type;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class WebhookInfoCommand extends Command
+final class ButtonDeleteCommand extends Command
 {
     public function __construct(
         private BotApi $botApi,
@@ -22,12 +23,12 @@ final class WebhookInfoCommand extends Command
 
     public static function getDefaultName(): string
     {
-        return 'telegram:webhook:info';
+        return 'telegram:button:delete';
     }
 
     public static function getDefaultDescription(): string
     {
-        return 'Get current webhook status';
+        return 'Delete bot\'s mebu button';
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -35,27 +36,15 @@ final class WebhookInfoCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         try {
-            $webhookInfo = $this->botApi->call(new Method\GetWebhookInfo());
+            $this->botApi->call(new Method\SetChatMenuButton(menuButton: new Type\MenuButtonDefault()));
+            $this->botApi->call(new Method\DeleteMyCommands());
         } catch (TelegramApiException $e) {
             $io->error($e->getMessage());
 
             return Command::FAILURE;
         }
 
-        if ($webhookInfo->url === '') {
-            $io->warning('Webhook is not installed');
-
-            return Command::SUCCESS;
-        }
-
-        $allowedUpdates = $webhookInfo->allowedUpdates === null
-            ? 'All update types'
-            : '[' . \implode(',', $webhookInfo->allowedUpdates) . ']'
-        ;
-
-        $io->writeln(\sprintf("<info>Webhook url:</info>\t\t%s", $webhookInfo->url));
-        $io->writeln(\sprintf("<info>Max connections:</info>\t%s", $webhookInfo->maxConnections));
-        $io->writeln(\sprintf("<info>Allowed updates:</info>\t%s", $allowedUpdates));
+        $io->success('Bot\'s menu button deleted');
 
         return Command::SUCCESS;
     }

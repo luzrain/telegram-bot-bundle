@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Luzrain\TelegramBotBundle\TelegramBot\Command;
+namespace Luzrain\TelegramBotBundle\Command;
 
 use Luzrain\TelegramBotApi\BotApi;
 use Luzrain\TelegramBotApi\Exception\TelegramApiException;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Luzrain\TelegramBotBundle\TelegramBot;
+namespace Luzrain\TelegramBotBundle;
 
 use Luzrain\TelegramBotBundle\Attribute\OnCommand;
 

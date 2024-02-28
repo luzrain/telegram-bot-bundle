@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Luzrain\TelegramBotBundle\TelegramBot\Command;
+namespace Luzrain\TelegramBotBundle\Command;
 
 use Luzrain\TelegramBotApi\BotApi;
 use Luzrain\TelegramBotApi\Exception\TelegramApiException;
 use Luzrain\TelegramBotApi\Method;
 use Luzrain\TelegramBotApi\Type;
-use Luzrain\TelegramBotBundle\TelegramBot\CommandMetadataProvider;
+use Luzrain\TelegramBotBundle\CommandMetadataProvider;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,7 +23,7 @@ final class ButtonUpdateCommand extends Command
         private CommandMetadataProvider $commandMetadataProvider,
         callable|null $descriptionProcessor,
     ) {
-        $this->descriptionProcessor = $descriptionProcessor ? $descriptionProcessor(...) : static fn (string $str) => $str;
+        $this->descriptionProcessor = $descriptionProcessor ? $descriptionProcessor(...) : static fn(string $str) => $str;
         parent::__construct();
     }
 

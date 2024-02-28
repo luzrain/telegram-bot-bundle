@@ -8,7 +8,7 @@ use Luzrain\TelegramBotApi\Event;
 use Luzrain\TelegramBotApi\Method;
 use Luzrain\TelegramBotApi\Type;
 use Luzrain\TelegramBotBundle\Attribute\OnEvent;
-use Luzrain\TelegramBotBundle\TelegramBot\TelegramCommand;
+use Luzrain\TelegramBotBundle\TelegramCommand;
 use Luzrain\TelegramBotBundle\Test\Helper\ControllerTestHelper;
 
 final class MessageController extends TelegramCommand

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Luzrain\TelegramBotBundle\TelegramBot\Command;
+namespace Luzrain\TelegramBotBundle\Command;
 
 use Luzrain\TelegramBotApi\BotApi;
 use Luzrain\TelegramBotApi\Exception\TelegramApiException;
-use Luzrain\TelegramBotBundle\TelegramBot\LongPollingService;
-use Luzrain\TelegramBotBundle\TelegramBot\UpdateHandler;
+use Luzrain\TelegramBotBundle\LongPollingService;
+use Luzrain\TelegramBotBundle\UpdateHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

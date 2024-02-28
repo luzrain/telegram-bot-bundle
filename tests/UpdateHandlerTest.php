@@ -6,8 +6,8 @@ namespace Luzrain\TelegramBotBundle\Test;
 
 use Luzrain\TelegramBotApi\Method;
 use Luzrain\TelegramBotApi\Type\Update;
-use Luzrain\TelegramBotBundle\TelegramBot\UpdateHandler;
 use Luzrain\TelegramBotBundle\Test\Helper\ControllerTestHelper;
+use Luzrain\TelegramBotBundle\UpdateHandler;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 final class UpdateHandlerTest extends KernelTestCase

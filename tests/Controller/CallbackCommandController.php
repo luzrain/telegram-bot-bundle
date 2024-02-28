@@ -6,7 +6,7 @@ namespace Luzrain\TelegramBotBundle\Test\Controller;
 
 use Luzrain\TelegramBotApi\Method;
 use Luzrain\TelegramBotBundle\Attribute\OnCallback;
-use Luzrain\TelegramBotBundle\TelegramBot\TelegramCommand;
+use Luzrain\TelegramBotBundle\TelegramCommand;
 use Luzrain\TelegramBotBundle\Test\Helper\ControllerTestHelper;
 
 final class CallbackCommandController extends TelegramCommand

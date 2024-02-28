@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Luzrain\TelegramBotBundle\TelegramBot\CommandMetadataProvider;
-use Luzrain\TelegramBotBundle\TelegramBot\UpdateHandler;
+use Luzrain\TelegramBotBundle\CommandMetadataProvider;
+use Luzrain\TelegramBotBundle\UpdateHandler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
