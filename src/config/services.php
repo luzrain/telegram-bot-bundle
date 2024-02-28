@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 return static function (array $config, ContainerBuilder $container) {
     $container
-        ->autowire(BotApi::class)
+        ->register(BotApi::class)
         ->setArguments([
             new Reference($config['request_factory']),
             new Reference($config['stream_factory']),
