@@ -12,6 +12,9 @@ final readonly class OnEvent
     public string $event;
     public int $priority;
 
+    /**
+     * @param class-string<Event> $event
+     */
     public function __construct(string $event, int $priority = 0)
     {
         $this->event = $event;
