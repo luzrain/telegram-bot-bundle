@@ -12,7 +12,6 @@ use Luzrain\TelegramBotBundle\TelegramBot\Command\PolllingStartCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\WebhookDeleteCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\WebhookInfoCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\WebhookUpdateCommand;
-use Luzrain\TelegramBotBundle\TelegramBot\CommandDescriptionProcessor;
 use Luzrain\TelegramBotBundle\TelegramBot\CommandMetadataProvider;
 use Luzrain\TelegramBotBundle\TelegramBot\Controller\WebHookController;
 use Luzrain\TelegramBotBundle\TelegramBot\LongPollingService;
@@ -49,6 +48,5 @@ final class ServicesAutowiringTest extends KernelTestCase
         $this->assertInstanceOf(ButtonDeleteCommand::class, self::$container->get('telegram_bot.menu_button_delete_command'));
         $this->assertInstanceOf(UpdateHandler::class, self::$container->get('telegram_bot.update_handler'));
         $this->assertInstanceOf(CommandMetadataProvider::class, self::$container->get('telegram_bot.command_metadata_provider'));
-        $this->assertInstanceOf(CommandDescriptionProcessor::class, self::$container->get('telegram_bot.description_processor'));
     }
 }

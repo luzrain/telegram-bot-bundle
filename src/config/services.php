@@ -14,10 +14,10 @@ use Luzrain\TelegramBotBundle\TelegramBot\Command\WebhookDeleteCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\WebhookInfoCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Command\WebhookUpdateCommand;
 use Luzrain\TelegramBotBundle\TelegramBot\Controller\WebHookController;
-use Luzrain\TelegramBotBundle\TelegramBot\DummyDescriptionProcessor;
 use Luzrain\TelegramBotBundle\TelegramBot\LongPollingService;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
 return static function (array $config, ContainerBuilder $container) {
@@ -94,19 +94,14 @@ return static function (array $config, ContainerBuilder $container) {
         ->setArguments([
             new Reference(BotApi::class),
             new Reference('telegram_bot.command_metadata_provider'),
-            new Reference('telegram_bot.description_processor'),
+            new Reference('telegram_bot.description_processor', ContainerInterface::NULL_ON_INVALID_REFERENCE),
         ])
-
     ;
 
     $container
         ->register('telegram_bot.menu_button_delete_command', ButtonDeleteCommand::class)
         ->addTag('console.command')
         ->setArguments([new Reference(BotApi::class)])
-    ;
-
-    $container
-        ->register('telegram_bot.description_processor', DummyDescriptionProcessor::class)
     ;
 
     /** @var \Closure $controllerConfigurate */

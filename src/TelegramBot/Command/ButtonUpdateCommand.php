@@ -8,7 +8,6 @@ use Luzrain\TelegramBotApi\BotApi;
 use Luzrain\TelegramBotApi\Exception\TelegramApiException;
 use Luzrain\TelegramBotApi\Method;
 use Luzrain\TelegramBotApi\Type;
-use Luzrain\TelegramBotBundle\TelegramBot\CommandDescriptionProcessor;
 use Luzrain\TelegramBotBundle\TelegramBot\CommandMetadataProvider;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -17,11 +16,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ButtonUpdateCommand extends Command
 {
+    private \Closure $descriptionProcessor;
+
     public function __construct(
         private BotApi $botApi,
         private CommandMetadataProvider $commandMetadataProvider,
-        private CommandDescriptionProcessor $descriptionProcessor,
+        callable|null $descriptionProcessor,
     ) {
+        $this->descriptionProcessor = $descriptionProcessor ? $descriptionProcessor(...) : static fn (string $str) => $str;
         parent::__construct();
     }
 
@@ -46,7 +48,7 @@ final class ButtonUpdateCommand extends Command
                 continue;
             }
 
-            $description = $this->descriptionProcessor->process($attr->description);
+            $description = ($this->descriptionProcessor)($attr->description);
             $output->writeln(\sprintf("%s\t\t%s", $attr->command, $description));
             $commands[] = new Type\BotCommand(command: $attr->command, description: $description);
         }
