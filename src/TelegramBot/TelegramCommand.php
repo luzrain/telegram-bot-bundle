@@ -25,8 +25,6 @@ abstract class TelegramCommand
     protected function reply(
         string $text,
         string|null $parseMode = null,
-        /** @deprecated */
-        bool|null $disableWebPagePreview = null,
         bool|null $disableNotification = null,
         bool|null $protectContent = null,
         Type\InlineKeyboardMarkup|Type\ReplyKeyboardMarkup|Type\ReplyKeyboardRemove|Type\ForceReply|null $replyMarkup = null,
