@@ -7,6 +7,7 @@ namespace Luzrain\TelegramBotBundle\TelegramBot\Command;
 use Luzrain\TelegramBotApi\BotApi;
 use Luzrain\TelegramBotApi\Exception\TelegramApiException;
 use Luzrain\TelegramBotApi\Method\SetWebhook;
+use Luzrain\TelegramBotApi\Type\InputFile;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -17,41 +18,46 @@ final class SetWebhookCommand extends Command
 {
     public function __construct(
         private BotApi $botApi,
-        private string|null $secretToken,
-        /** @var list<string> */
         private array $allowedUpdates,
+        private string|null $webhookUrl,
+        private int|null $maxConnections,
+        private string|null $secretToken,
+        private string|null $certificate,
     ) {
         parent::__construct();
     }
 
     public static function getDefaultName(): string
     {
-        return 'telegram:webhook:set';
+        return 'telegram:webhook:update';
     }
 
     public static function getDefaultDescription(): string
     {
-        return 'Set webhook url';
+        return 'Update webhook settings';
     }
 
     protected function configure(): void
     {
         $this->addOption('url', null, InputOption::VALUE_REQUIRED, 'Webhook url');
-        $this->addOption('max-connections', null, InputOption::VALUE_REQUIRED, 'Max connections', 40);
+        $this->addOption('max-connections', null, InputOption::VALUE_REQUIRED, 'Max connections');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
 
-        if ($input->getOption('url') === null) {
-            $io->error('You should provide "--url" option');
+        $webhookUrl = $input->getOption('url') ?? $this->webhookUrl;
+        $maxConnections = (int) ($input->getOption('max-connections') ?? $this->maxConnections ?? 40);
+
+        if ($webhookUrl === null) {
+            $io->error('webhook_url config option is not set up. Provide "--url" option');
 
             return Command::FAILURE;
         }
 
         try {
-            $url = $this->urlValidate($input->getOption('url'));
+            $url = $this->urlValidate($webhookUrl);
         } catch (\RuntimeException $e) {
             $io->error($e->getMessage());
 
@@ -61,7 +67,8 @@ final class SetWebhookCommand extends Command
         try {
             $this->botApi->call(new SetWebhook(
                 url: $url,
-                maxConnections: (int) $input->getOption('max-connections'),
+                certificate: $this->certificate === null ? null : new InputFile($this->certificate),
+                maxConnections: $maxConnections,
                 allowedUpdates: $this->allowedUpdates,
                 secretToken: $this->secretToken,
             ));

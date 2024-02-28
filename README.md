@@ -31,8 +31,12 @@ telegram_bot:
   request_factory: GuzzleHttp\Psr7\HttpFactory # Psr\Http\Message\RequestFactoryInterface implementation
   stream_factory: GuzzleHttp\Psr7\HttpFactory  # Psr\Http\Message\StreamFactoryInterface implementation
   api_token: API_TOKEN                         # Bot api token
-  #secret_token: CHANGE_ME                     # Optional. Secret token to protect webhook endpoint from unauthenticated requests (update webhook url after change)
-  #allowed_updates: ['message']                # Optional. List of the update types you want your bot to receive (update webhook url after change)
+  #allowed_updates: ['message']                # Optional. List of the update types you want your bot to receive (run telegram:webhook:set after change)
+  #webhook:                                    # run telegram:webhook:set command after change webhook settings
+  #  url: https://localhost/tg-webhook         # Optional. Webhook url
+  #  max_connections: 40                       # Optional. The maximum allowed number of simultaneous connections to the webhook
+  #  secret_token: CHANGE_ME                   # Optional. Secret token to protect webhook endpoint from unauthenticated requests
+  #  certificate: /path/to/certificate         # Optional. Public key certificate
 ```
 
 ### Optional. Configure webhook route

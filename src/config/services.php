@@ -23,10 +23,12 @@ use Symfony\Component\DependencyInjection\Reference;
 return static function (array $config, ContainerBuilder $container) {
     $container
         ->autowire(BotApi::class)
-        ->setArgument('$requestFactory', new Reference($config['request_factory']))
-        ->setArgument('$streamFactory', new Reference($config['stream_factory']))
-        ->setArgument('$client', new Reference($config['http_client']))
-        ->setArgument('$token', $config['api_token'])
+        ->setArguments([
+            new Reference($config['request_factory']),
+            new Reference($config['stream_factory']),
+            new Reference($config['http_client']),
+            $config['api_token'],
+        ])
     ;
 
     $container
@@ -35,57 +37,72 @@ return static function (array $config, ContainerBuilder $container) {
 
     $container
         ->register('telegram_bot.webhook_controller', WebHookController::class)
-        ->setArgument('$updateHandler', new Reference('telegram_bot.update_handler'))
-        ->setArgument('$secretToken', $config['secret_token'])
         ->addTag('controller.service_arguments')
+        ->setArguments([
+            new Reference('telegram_bot.update_handler'),
+            $config['webhook']['secret_token'],
+        ])
     ;
 
     $container
         ->register('telegram_bot.long_polling_service', LongPollingService::class)
-        ->setArgument('$botApi', new Reference(BotApi::class))
-        ->setArgument('$allowedUpdates', $config['allowed_updates'])
+        ->setArguments([
+            new Reference(BotApi::class),
+            $config['allowed_updates'],
+        ])
     ;
 
     $container
         ->register('telegram_bot.set_webhook_command', SetWebhookCommand::class)
-        ->setArgument('$botApi', new Reference(BotApi::class))
-        ->setArgument('$secretToken', $config['secret_token'])
-        ->setArgument('$allowedUpdates', $config['allowed_updates'])
         ->addTag('console.command')
+        ->setArguments([
+            new Reference(BotApi::class),
+            $config['allowed_updates'],
+            $config['webhook']['url'],
+            $config['webhook']['max_connections'],
+            $config['webhook']['secret_token'],
+            $config['webhook']['certificate'],
+        ])
     ;
 
     $container
         ->register('telegram_bot.get_webhook_command', WebhookInfoCommand::class)
-        ->setArgument('$botApi', new Reference(BotApi::class))
         ->addTag('console.command')
+        ->setArguments([new Reference(BotApi::class)])
     ;
 
     $container
         ->register('telegram_bot.delete_webhook_command', DeleteWebhookCommand::class)
-        ->setArgument('$botApi', new Reference(BotApi::class))
         ->addTag('console.command')
+        ->setArguments([new Reference(BotApi::class)])
     ;
 
     $container
         ->register('telegram_bot.polling_command', PolllingStartCommand::class)
-        ->setArgument('$longPollingService', new Reference('telegram_bot.long_polling_service'))
-        ->setArgument('$updateHandler', new Reference('telegram_bot.update_handler'))
-        ->setArgument('$botApi', new Reference(BotApi::class))
         ->addTag('console.command')
+        ->setArguments([
+            new Reference('telegram_bot.long_polling_service'),
+            new Reference('telegram_bot.update_handler'),
+            new Reference(BotApi::class),
+        ])
+
     ;
 
     $container
         ->register('telegram_bot.menu_button_set_commands', ButtonSetCommandsCommand::class)
-        ->setArgument('$botApi', new Reference(BotApi::class))
-        ->setArgument('$commandMetadataProvider', new Reference('telegram_bot.command_metadata_provider'))
-        ->setArgument('$descriptionProcessor', new Reference('telegram_bot.description_processor'))
         ->addTag('console.command')
+        ->setArguments([
+            new Reference(BotApi::class),
+            new Reference('telegram_bot.command_metadata_provider'),
+            new Reference('telegram_bot.description_processor'),
+        ])
+
     ;
 
     $container
         ->register('telegram_bot.menu_button_delete_command', ButtonDeleteCommand::class)
-        ->setArgument('$botApi', new Reference(BotApi::class))
         ->addTag('console.command')
+        ->setArguments([new Reference(BotApi::class)])
     ;
 
     $container
