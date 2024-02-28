@@ -26,6 +26,7 @@ final class TestCommandController extends TelegramCommand
     }
 
     #[OnCommand(command: '/test3', description: 'test3 command description', publish: false)]
+    #[OnCommand(command: '/test4', description: 'test4 command description', publish: false)]
     public function test3(): Method
     {
         ControllerTestHelper::$isTest3CommandCommand = true;

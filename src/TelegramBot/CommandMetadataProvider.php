@@ -21,6 +21,10 @@ final class CommandMetadataProvider
     public function gelMetadataList(): \Generator
     {
         foreach ($this->controllersMap as ['controller' => $controller]) {
+            if (isset($this->controllerClassMap[$controller])) {
+                return;
+            }
+            $this->controllerClassMap[$controller] = true;
             foreach ($this->instantiateAttributes($controller) as $attrubute) {
                 yield $attrubute;
             }
@@ -36,12 +40,6 @@ final class CommandMetadataProvider
     private function instantiateAttributes(string $controller): \Generator
     {
         [$class, $method] = \explode('::', $controller, 2);
-
-        if (isset($this->controllerClassMap[$class])) {
-            return;
-        }
-
-        $this->controllerClassMap[$class] = true;
         $reflClass = new \ReflectionClass($class);
         $reflMethod = $reflClass->getMethod($method);
         $attributes = $reflMethod->getAttributes(OnCommand::class);
