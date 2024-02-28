@@ -18,7 +18,7 @@ final readonly class OnCommand
     public function __construct(string $command, string $description = '', bool $publish = false, int $priority = 0)
     {
         $this->event = Command::class;
-        $this->command = '/' . ltrim($command, '/');
+        $this->command = '/' . \ltrim($command, '/');
         $this->description = $description;
         $this->publish = $publish;
         $this->priority = $priority;
@@ -28,7 +28,7 @@ final readonly class OnCommand
         }
 
         if ($this->publish === true && $this->description === '') {
-            throw new \InvalidArgumentException(sprintf('Description should be set for publish command "%s"', $this->command));
+            throw new \InvalidArgumentException(\sprintf('Description should be set for publish command "%s"', $this->command));
         }
     }
 }

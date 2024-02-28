@@ -50,12 +50,12 @@ final class WebhookInfoCommand extends Command
 
         $allowedUpdates = $webhookInfo->allowedUpdates === null
             ? 'All update types'
-            : '[' . implode(',', $webhookInfo->allowedUpdates) . ']'
+            : '[' . \implode(',', $webhookInfo->allowedUpdates) . ']'
         ;
 
-        $io->writeln(sprintf("<info>Webhook url:</info>\t\t%s", $webhookInfo->url));
-        $io->writeln(sprintf("<info>Max connections:</info>\t%s", $webhookInfo->maxConnections));
-        $io->writeln(sprintf("<info>Allowed updates:</info>\t%s", $allowedUpdates));
+        $io->writeln(\sprintf("<info>Webhook url:</info>\t\t%s", $webhookInfo->url));
+        $io->writeln(\sprintf("<info>Max connections:</info>\t%s", $webhookInfo->maxConnections));
+        $io->writeln(\sprintf("<info>Allowed updates:</info>\t%s", $allowedUpdates));
 
         return Command::SUCCESS;
     }

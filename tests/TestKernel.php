@@ -30,7 +30,7 @@ final class TestKernel extends Kernel
 
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
-        $loader->load(function(ContainerBuilder $container) {
+        $loader->load(function (ContainerBuilder $container) {
             $container->register('httpClient', ClientInterface::class);
             $container->register('requestFactory', RequestFactoryInterface::class);
             $container->register('streamFactory', StreamFactoryInterface::class);

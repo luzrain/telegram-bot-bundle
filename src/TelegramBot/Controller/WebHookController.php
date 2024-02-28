@@ -39,7 +39,7 @@ final readonly class WebHookController
         }
 
         $response = new JsonResponse($this->updateHandler->handle($update));
-        $response->headers->set('Content-Length', (string) strlen((string) $response->getContent()));
+        $response->headers->set('Content-Length', (string) \strlen((string) $response->getContent()));
 
         return $response;
     }

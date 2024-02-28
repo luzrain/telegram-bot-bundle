@@ -1,18 +1,11 @@
 <?php
 
-$finder = PhpCsFixer\Finder::create()
-    ->in(__DIR__ . '/src')
-;
-
 $rules = [
     // Rules that follow PSR-12 standard.
-    '@PSR12' => true,
+    '@PER-CS2.0' => true,
 
     // Rules that follow PSR-12 standard. This set contains rules that are risky.
-    '@PSR12:risky' => true,
-
-    // Ignore function arguments lists that contain newlines (it for more readable attributes set right in constructors).
-    'method_argument_space' => ['on_multiline' => 'ignore'],
+    '@PER-CS2.0:risky' => true,
 
     // PHP arrays should be declared using the short syntax.
     'array_syntax' => ['syntax' => 'short'],
@@ -22,9 +15,6 @@ $rules = [
 
     // A single space or none should be between cast and variable.
     'cast_spaces' => true,
-
-    // Class, trait and interface elements must be separated with one or none blank line.
-    'class_attributes_separation' => ['elements' => ['method' => 'one']],
 
     // There should not be any empty comments.
     'no_empty_comment' => true,
@@ -62,9 +52,6 @@ $rules = [
     // Replace get_class calls on object variables with class keyword syntax.
     'get_class_to_class_keyword' => true,
 
-    // Class DateTimeImmutable should be used instead of DateTime.
-    'date_time_immutable' => true,
-
     // Removes @param, @return and @var tags that don’t provide any useful information.
     'no_superfluous_phpdoc_tags' => true,
 
@@ -73,11 +60,31 @@ $rules = [
         'after_heredoc' => true,
         'elements' => ['arrays', 'match', 'arguments', 'parameters'],
     ],
+
+    // Empty body of class, interface, trait, enum or function must be abbreviated as {} and placed on the same line
+    'single_line_empty_body' => false,
+
+    // Functions should be used with $strict param set to true.
+    'strict_param' => true,
+
+    // Method chaining MUST be properly indented.
+    'method_chaining_indentation' => true,
+
+    // Add leading \ before function invocation to speed up resolving.
+    'native_function_invocation' => [
+        'include' => ['@all'],
+        'scope' => 'all',
+        'strict' => true,
+    ],
 ];
 
 return (new PhpCsFixer\Config())
     ->setCacheFile(__DIR__ . '/var/.php-cs-fixer.cache')
-    ->setFinder($finder)
+    ->setFinder(PhpCsFixer\Finder::create()
+        ->in(__DIR__ . '/src')
+        ->in(__DIR__ . '/tests')
+        ->notContains(['@php-cs-fixer-ignore'])
+    )
     ->setRules($rules)
     ->setRiskyAllowed(true)
-;
+    ;

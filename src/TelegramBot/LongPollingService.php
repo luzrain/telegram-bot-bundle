@@ -39,7 +39,7 @@ final class LongPollingService
     public function cunsumeUpdates(): \Generator
     {
         $start = \hrtime()[0];
-        $checkTimeLimit = fn () => $this->timeLimit > 0 && \hrtime()[0] - $start >= $this->timeLimit;
+        $checkTimeLimit = fn() => $this->timeLimit > 0 && \hrtime()[0] - $start >= $this->timeLimit;
 
         while (true) {
             foreach ($this->getUpdates() as $update) {

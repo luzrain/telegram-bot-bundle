@@ -109,7 +109,7 @@ return static function (array $config, ContainerBuilder $container) {
         ->register('telegram_bot.description_processor', DummyDescriptionProcessor::class)
     ;
 
-    $controllerConfigurate = static function(ChildDefinition $definition, object $attribute, \ReflectionMethod $reflector): void {
+    $controllerConfigurate = static function (ChildDefinition $definition, object $attribute, \ReflectionMethod $reflector): void {
         $definition->addTag('telegram_bot.command', [
             'event' => $attribute->event,
             'value' => $attribute->command ?? $attribute->callbackData ?? '',

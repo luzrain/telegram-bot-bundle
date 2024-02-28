@@ -32,7 +32,7 @@ final class CommandMetadataProvider
      */
     private function instantiateAttribute(string $controller): OnCommand|null
     {
-        [$class, $method] = explode('::', $controller, 2);
+        [$class, $method] = \explode('::', $controller, 2);
         $reflClass = new \ReflectionClass($class);
         $reflMethod = $reflClass->getMethod($method);
         $reflAttribute = $reflMethod->getAttributes(OnCommand::class)[0] ?? null;

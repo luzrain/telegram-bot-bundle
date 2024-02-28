@@ -27,10 +27,10 @@ return new class () implements CompilerPassInterface {
         }
 
         // Commands have the highest priority by default
-        \usort($controllersMap, fn (array $a, array $b) => \str_starts_with($a['value'], '/') ? -1 : 1);
+        \usort($controllersMap, fn(array $a, array $b) => \str_starts_with($a['value'], '/') ? -1 : 1);
 
         // Sort by priority
-        \usort($controllersMap, fn (array $a, array $b) => $b['priority'] <=> $a['priority']);
+        \usort($controllersMap, fn(array $a, array $b) => $b['priority'] <=> $a['priority']);
 
         foreach ($controllersMap as $id => $row) {
             unset($controllersMap[$id]['priority']);

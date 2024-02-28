@@ -47,7 +47,7 @@ final class ButtonSetCommandsCommand extends Command
             }
 
             $description = $this->descriptionProcessor->process($attr->description);
-            $output->writeln(sprintf("%s\t\t%s", $attr->command, $description));
+            $output->writeln(\sprintf("%s\t\t%s", $attr->command, $description));
             $commands[] = new Type\BotCommand(command: $attr->command, description: $description);
         }
 

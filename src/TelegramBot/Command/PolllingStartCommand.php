@@ -65,7 +65,7 @@ final class PolllingStartCommand extends Command
             foreach ($this->longPollingService->cunsumeUpdates() as $update) {
                 $date = new \DateTimeImmutable('now');
                 $formattedDate = $date->format('Y-m-d H:i:s');
-                $output->writeln(sprintf(
+                $output->writeln(\sprintf(
                     '%s: [%s] Update object received',
                     $formattedDate,
                     $update->updateId,
@@ -78,7 +78,7 @@ final class PolllingStartCommand extends Command
                 try {
                     $this->botApi->call($callbackResponse);
                 } catch (TelegramApiException $e) {
-                    $output->writeln(sprintf(
+                    $output->writeln(\sprintf(
                         '%s: [%s] <error>TelegramApiException (%s) %s</error>',
                         $formattedDate,
                         $update->updateId,

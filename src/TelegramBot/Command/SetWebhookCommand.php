@@ -78,7 +78,7 @@ final class SetWebhookCommand extends Command
             return Command::FAILURE;
         }
 
-        $io->success(sprintf('Webhook url set to "%s"', $url));
+        $io->success(\sprintf('Webhook url set to "%s"', $url));
 
         return Command::SUCCESS;
     }
@@ -89,15 +89,15 @@ final class SetWebhookCommand extends Command
             throw new \RuntimeException('Url should not be blank');
         }
 
-        if ((parse_url($url, PHP_URL_SCHEME) ?? 'https') !== 'https') {
+        if ((\parse_url($url, PHP_URL_SCHEME) ?? 'https') !== 'https') {
             throw new \RuntimeException('Url should starts with https://');
         }
 
-        if (!str_starts_with($url, 'https://')) {
+        if (!\str_starts_with($url, 'https://')) {
             $url = 'https://' . $url;
         }
 
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+        if (!\filter_var($url, FILTER_VALIDATE_URL)) {
             throw new \RuntimeException('Invalid url');
         }
 
