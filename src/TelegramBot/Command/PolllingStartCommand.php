@@ -36,25 +36,34 @@ final class PolllingStartCommand extends Command
 
     protected function configure(): void
     {
-        $this->addOption('timeout', 't', InputOption::VALUE_REQUIRED, 'Timeout for long polling connection in seconds', 15);
+        $this->addOption('timeout', null, InputOption::VALUE_REQUIRED, 'Timeout for long polling connection in seconds', 15);
+        $this->addOption('time-limit', 't', InputOption::VALUE_REQUIRED, 'The time limit in seconds the worker can handle new messages');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
         $timeout = (int) $input->getOption('timeout');
-        $output->writeln('<info>Polling service started</info>');
+        $timeLimit = (int) $input->getOption('time-limit');
 
-        try {
-            $this->longPollingService->setTimeout($timeout);
-        } catch (\InvalidArgumentException $e) {
-            $io->error($e->getMessage());
+        if ($timeout <= 0) {
+            $io->error('timeout should be greater that 0');
             return Command::FAILURE;
         }
 
+        if ($timeLimit < 0) {
+            $io->error('time-limit should be greater that 0');
+            return Command::FAILURE;
+        }
+
+        $this->longPollingService->setTimeout($timeout);
+        $this->longPollingService->setTimeLimit($timeLimit);
+
+        $output->writeln('<info>Polling service started</info>');
+
         try {
             foreach ($this->longPollingService->cunsumeUpdates() as $update) {
-                $date = new \DateTimeImmutable();
+                $date = new \DateTimeImmutable('now');
                 $formattedDate = $date->format('Y-m-d H:i:s');
                 $output->writeln(sprintf(
                     '%s: [%s] Update object received',
@@ -62,9 +71,7 @@ final class PolllingStartCommand extends Command
                     $update->updateId,
                 ));
 
-                $callbackResponse = $this->updateHandler->handle($update);
-
-                if ($callbackResponse === null) {
+                if (null === $callbackResponse = $this->updateHandler->handle($update)) {
                     continue;
                 }
 
