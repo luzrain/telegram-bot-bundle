@@ -53,7 +53,7 @@ return static function (array $config, ContainerBuilder $container) {
     ;
 
     $container
-        ->register('telegram_bot.set_webhook_command', WebhookUpdateCommand::class)
+        ->register('telegram_bot.webhook_update_command', WebhookUpdateCommand::class)
         ->addTag('console.command')
         ->setArguments([
             new Reference(BotApi::class),
@@ -66,30 +66,29 @@ return static function (array $config, ContainerBuilder $container) {
     ;
 
     $container
-        ->register('telegram_bot.get_webhook_command', WebhookInfoCommand::class)
+        ->register('telegram_bot.webhook_info_command', WebhookInfoCommand::class)
         ->addTag('console.command')
         ->setArguments([new Reference(BotApi::class)])
     ;
 
     $container
-        ->register('telegram_bot.delete_webhook_command', WebhookDeleteCommand::class)
+        ->register('telegram_bot.webhook_delete_command', WebhookDeleteCommand::class)
         ->addTag('console.command')
         ->setArguments([new Reference(BotApi::class)])
     ;
 
     $container
-        ->register('telegram_bot.polling_command', PolllingStartCommand::class)
+        ->register('telegram_bot.polling_start_command', PolllingStartCommand::class)
         ->addTag('console.command')
         ->setArguments([
             new Reference('telegram_bot.long_polling_service'),
             new Reference('telegram_bot.update_handler'),
             new Reference(BotApi::class),
         ])
-
     ;
 
     $container
-        ->register('telegram_bot.menu_button_set_commands', ButtonUpdateCommand::class)
+        ->register('telegram_bot.button_update_commands', ButtonUpdateCommand::class)
         ->addTag('console.command')
         ->setArguments([
             new Reference(BotApi::class),
@@ -99,7 +98,7 @@ return static function (array $config, ContainerBuilder $container) {
     ;
 
     $container
-        ->register('telegram_bot.menu_button_delete_command', ButtonDeleteCommand::class)
+        ->register('telegram_bot.button_delete_command', ButtonDeleteCommand::class)
         ->addTag('console.command')
         ->setArguments([new Reference(BotApi::class)])
     ;
@@ -108,7 +107,7 @@ return static function (array $config, ContainerBuilder $container) {
     $controllerConfigurate = static function (ChildDefinition $definition, object $attribute, \ReflectionMethod $reflector) use ($container): void {
         $value = $attribute->command ?? $attribute->callbackData ?? '';
 
-        $definition->addTag('telegram_bot.command', [
+        $definition->addTag('telegram_bot.controller', [
             'event' => $attribute->event,
             'value' => $container->getParameterBag()->resolveValue($value),
             'controller' => $reflector->getDeclaringClass()->getName() . '::' . $reflector->getName(),

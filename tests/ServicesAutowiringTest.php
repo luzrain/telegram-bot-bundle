@@ -40,12 +40,12 @@ final class ServicesAutowiringTest extends KernelTestCase
         $this->assertInstanceOf(ClientApi::class, self::$container->get('telegram_bot.client_api'));
         $this->assertInstanceOf(WebHookController::class, self::$container->get('telegram_bot.webhook_controller'));
         $this->assertInstanceOf(LongPollingService::class, self::$container->get('telegram_bot.long_polling_service'));
-        $this->assertInstanceOf(WebhookUpdateCommand::class, self::$container->get('telegram_bot.set_webhook_command'));
-        $this->assertInstanceOf(WebhookInfoCommand::class, self::$container->get('telegram_bot.get_webhook_command'));
-        $this->assertInstanceOf(WebhookDeleteCommand::class, self::$container->get('telegram_bot.delete_webhook_command'));
-        $this->assertInstanceOf(PolllingStartCommand::class, self::$container->get('telegram_bot.polling_command'));
-        $this->assertInstanceOf(ButtonUpdateCommand::class, self::$container->get('telegram_bot.menu_button_set_commands'));
-        $this->assertInstanceOf(ButtonDeleteCommand::class, self::$container->get('telegram_bot.menu_button_delete_command'));
+        $this->assertInstanceOf(WebhookUpdateCommand::class, self::$container->get('telegram_bot.webhook_update_command'));
+        $this->assertInstanceOf(WebhookInfoCommand::class, self::$container->get('telegram_bot.webhook_info_command'));
+        $this->assertInstanceOf(WebhookDeleteCommand::class, self::$container->get('telegram_bot.webhook_delete_command'));
+        $this->assertInstanceOf(PolllingStartCommand::class, self::$container->get('telegram_bot.polling_start_command'));
+        $this->assertInstanceOf(ButtonUpdateCommand::class, self::$container->get('telegram_bot.button_update_commands'));
+        $this->assertInstanceOf(ButtonDeleteCommand::class, self::$container->get('telegram_bot.button_delete_command'));
         $this->assertInstanceOf(UpdateHandler::class, self::$container->get('telegram_bot.update_handler'));
         $this->assertInstanceOf(CommandMetadataProvider::class, self::$container->get('telegram_bot.command_metadata_provider'));
     }

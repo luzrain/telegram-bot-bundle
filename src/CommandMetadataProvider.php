@@ -6,13 +6,10 @@ namespace Luzrain\TelegramBotBundle;
 
 use Luzrain\TelegramBotBundle\Attribute\OnCommand;
 
-final class CommandMetadataProvider
+final readonly class CommandMetadataProvider
 {
-    private array $controllerClassMap = [];
-
-    public function __construct(
-        private array $controllersMap,
-    ) {
+    public function __construct(private array $controllers)
+    {
     }
 
     /**
@@ -20,17 +17,11 @@ final class CommandMetadataProvider
      */
     public function gelMetadataList(): \Generator
     {
-        foreach ($this->controllersMap as ['controller' => $controller]) {
-            if (isset($this->controllerClassMap[$controller])) {
-                return;
-            }
-            $this->controllerClassMap[$controller] = true;
+        foreach ($this->controllers as $controller) {
             foreach ($this->instantiateAttributes($controller) as $attrubute) {
                 yield $attrubute;
             }
         }
-
-        $this->controllerClassMap[] = [];
     }
 
     /**

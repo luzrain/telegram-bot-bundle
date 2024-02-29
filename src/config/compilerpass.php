@@ -12,17 +12,12 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 return new class () implements CompilerPassInterface {
     public function process(ContainerBuilder $container): void
     {
-        $controllers = $container->findTaggedServiceIds('telegram_bot.command');
+        $controllers = $container->findTaggedServiceIds('telegram_bot.controller');
 
         $controllersMap = [];
-        foreach ($controllers as $attributeEntries) {
-            foreach ($attributeEntries as $attributeEntry) {
-                $controllersMap[] = [
-                    'event' => $attributeEntry['event'],
-                    'value' => $attributeEntry['value'],
-                    'controller' => $attributeEntry['controller'],
-                    'priority' => $attributeEntry['priority'],
-                ];
+        foreach ($controllers as $controller) {
+            foreach ($controller as $attributeEntry) {
+                $controllersMap[] = $attributeEntry;
             }
         }
 
@@ -32,14 +27,11 @@ return new class () implements CompilerPassInterface {
         // Sort by priority
         \usort($controllersMap, static fn(array $a, array $b) => $b['priority'] <=> $a['priority']);
 
-        foreach ($controllersMap as $id => $row) {
-            unset($controllersMap[$id]['priority']);
-        }
-
         $container
             ->register('telegram_bot.controllers_locator', ServiceLocator::class)
+            ->addTag('container.service_locator')
             ->setArguments([$this->referenceMap(\array_keys($controllers))])
-            ->addTag('container.service_locator');
+        ;
 
         $container
             ->register('telegram_bot.update_handler', UpdateHandler::class)
@@ -52,7 +44,7 @@ return new class () implements CompilerPassInterface {
 
         $container
             ->register('telegram_bot.command_metadata_provider', CommandMetadataProvider::class)
-            ->setArguments([$controllersMap])
+            ->setArguments([\array_unique(\array_column($controllersMap, 'controller'))])
         ;
     }
 
