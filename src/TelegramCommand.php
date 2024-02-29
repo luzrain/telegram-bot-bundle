@@ -10,12 +10,7 @@ use Luzrain\TelegramBotApi\Type;
 
 abstract class TelegramCommand
 {
-    private int|null $chatId = null;
-
-    public function setChatId(int|null $chatId): void
-    {
-        $this->chatId = $chatId;
-    }
+    public int|null $chatId = null;
 
     protected function reply(
         string $text,

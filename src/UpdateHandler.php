@@ -55,22 +55,23 @@ final readonly class UpdateHandler
         [$service, $method] = \explode('::', $controller, 2);
         $controllerService = $this->serviceLocator->get($service);
 
-        $chatId = null;
-        if ($update instanceof Update) {
-            foreach ($update as $updateItem) {
-                if (isset($updateItem->chat->id)) {
-                    $chatId = $updateItem->chat->id;
-                    break;
-                }
-            }
-        } elseif (isset($update->chat->id)) {
-            $chatId = $update->chat->id;
-        }
-
         if ($controllerService instanceof TelegramCommand) {
-            $controllerService->setChatId($chatId);
+            $controllerService->chatId = $this->findChatId($update);
         }
 
         return $controllerService->$method($update, ...$params);
+    }
+
+    private function findChatId(object $update): int|null
+    {
+        if ($update instanceof Update) {
+            foreach ($update as $updateItem) {
+                if (null !== $chatId = $updateItem->chat->id ?? $updateItem->message->chat->id ?? null) {
+                    return $chatId;
+                }
+            }
+        }
+
+        return $update->chat->id ?? $update->message->chat->id ?? null;
     }
 }
