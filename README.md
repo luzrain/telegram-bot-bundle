@@ -5,10 +5,10 @@
 
 A symfony bundle for [luzrain/telegram-bot-api](https://github.com/luzrain/telegram-bot-api) library.
 
-## Installation
-### Install composer package
+## Getting started
+### Install composer packages
 ```bash
-$ composer require luzrain/telegram-bot-bundle
+$ composer require luzrain/telegram-bot-bundle symfony/http-client nyholm/psr7
 ```
 
 ### Enable the Bundle
@@ -27,16 +27,9 @@ return [
 # config/packages/telegram_bot.yaml
 
 telegram_bot:
-  http_client: GuzzleHttp\ClientInterface      # Psr\Http\Client\ClientInterface implementation
-  request_factory: GuzzleHttp\Psr7\HttpFactory # Psr\Http\Message\RequestFactoryInterface implementation
-  stream_factory: GuzzleHttp\Psr7\HttpFactory  # Psr\Http\Message\StreamFactoryInterface implementation
-  api_token: API_TOKEN                         # Bot api token
-  #allowed_updates: ['message']                # Optional. List of the update types you want your bot to receive (run telegram:webhook:set after change)
-  #webhook:                                    # run telegram:webhook:set command after change webhook settings
-  #  url: https://localhost/tg-webhook         # Optional. Webhook url
-  #  max_connections: 40                       # Optional. The maximum allowed number of simultaneous connections to the webhook
-  #  secret_token: CHANGE_ME                   # Optional. Secret token to protect webhook endpoint from unauthenticated requests
-  #  certificate: /path/to/certificate         # Optional. Public key certificate
+  api_token: API_TOKEN
+#  webhook:
+#    url: https://localhost/tg-webhook
 ```
 
 ### Optional. Configure webhook route
@@ -45,37 +38,72 @@ telegram_bot:
 
 # ...
 telegram_webhook:
-  path: /telagram-webhook
+  path: /tg-webhook
   controller: telegram_bot.webhook_controller
+```
+
+Note that *symfony/http-client* and *nyholm/psr7* are not necessary. You can use any PSR-18 client and PSR-17 factories.  
+Set custom services in *http_client*, *request_factory*, *stream_factory* options in *telegram_bot.yaml* configuration file.  
+Here is an example how to use [guzzle](https://github.com/guzzle/guzzle) http client:
+
+```yaml
+# config/services.yaml
+
+psr18.guzzle_client:
+  class: GuzzleHttp\Client
+  arguments:
+    - http_errors: false
+
+psr17.guzzle_factory:
+  class: GuzzleHttp\Psr7\HttpFactory
+```
+
+```yaml
+# config/packages/telegram_bot.yaml
+
+telegram_bot:
+  http_client: psr18.guzzle_client
+  request_factory: psr17.guzzle_factory
+  stream_factory: psr17.guzzle_factory
+  api_token: API_TOKEN
+```
+
+For a complete list of available options with documentation, see the command output.
+```bash
+$ bin/console config:dump-reference telegram_bot
 ```
 
 ### Getting messages from telegram
 There are two ways to receive messages from Telegram.
 #### Webhook. Recommended way.
-For this you need to configure webhook route and make it available from the Internet.  
-Send webhook url to Telegram with the command:  
-``` bash
+You must configure the webhook route and make it available from the Internet.  
+Configure *webhook.url* option in *telegram_bot.yaml* configuration file;  
+Update the webhook configuration in telegram bot with the command.  
+```bash
 $ bin/console telegram:webhook:update
 ```
 
+Note that each time you change *webhook* and *allowed_updates* options in configuration files you should run this command for update telegram bot settings.
+
 #### Polling daemon.  
 Use it in a development environment or if you can't provide public access to the webhook url.  
-Run the polling daemon with the command:  
-``` bash
+Run the polling daemon with the command.  
+```bash
 $ bin/console telegram:polling:start
 ```
 
-## Example of usage
+## Examples
 ### Command controller
 ```php
 use Luzrain\TelegramBotApi\Method;
 use Luzrain\TelegramBotApi\Type;
 use Luzrain\TelegramBotBundle\Attribute\OnCommand;
-use Luzrain\TelegramBotBundle\TelegramBot\TelegramCommand;
+use Luzrain\TelegramBotBundle\TelegramCommand;
 
 final class StartCommandController extends TelegramCommand
 {
-    // Be aware to set default values for command arguments as they won't necessarily will be passed
+    // You can pass command arguments next to $message.
+    // Be aware to set default values for arguments as they won't necessarily will be passed
     #[OnCommand('/start')]
     public function __invoke(Type\Message $message, string $arg1 = '', string $arg2 = ''): Method
     {
@@ -84,87 +112,41 @@ final class StartCommandController extends TelegramCommand
 }
 ```
 
-### Message controller
+### Any event controller
 ```php
 use Luzrain\TelegramBotApi\Event;
 use Luzrain\TelegramBotApi\Method;
 use Luzrain\TelegramBotApi\Type;
 use Luzrain\TelegramBotBundle\Attribute\OnEvent;
 
-// It's not necessary to extend TelegramCommand at all
+// It's not necessary to extend TelegramCommand
 final class OnMessageController
 {
+    // Listen any available event from Event namespace
     #[OnEvent(Event\Message::class)]
     public function __invoke(Type\Message $message): Method
     {
         return new Method\SendMessage(
-            chatId: $message->from->id,
+            chatId: $message->chat->id,
             text: 'You wrote: ' . $message->text,
         );
     }
 }
 ```
 
-### Access control controller
+### Publish command list as bot button
+It's possible to publish all your commands, which will be shown as a list of available commands in the bot's menu button.
+To do this, fill in the *description* field and the *publish* flag in the OnCommand attribute.
 ```php
-use Luzrain\TelegramBotApi\Event;
-use Luzrain\TelegramBotApi\EventCallbackReturn;
-use Luzrain\TelegramBotApi\Type;
-use Luzrain\TelegramBotBundle\Attribute\OnEvent;
-use Luzrain\TelegramBotBundle\TelegramBot\TelegramCommand;
-
-final class AccessControlController extends TelegramCommand
-{
-    // Set the highest priority to ensure that this method is executed before any others.
-    #[OnEvent(Event\Update::class, priority: 10)]
-    public function __invoke(Type\Update $update): EventCallbackReturn
-    {
-        // Stop executing other controllers if the sender doesn't meet some conditions
-        if ($update->message?->from->id !== 123456789) {
-            return $this->stop();
-        }
-
-        return $this->continue();
-    }
-}
+#[OnCommand(command: '/command1', description: 'Test command 1', publish: true)]
 ```
 
-### Publish list of command as bot button
-It's possible to publish all your commands that will be shown as list of available commands in the bot's menu button.
-To do this fill in the _description_ field and the _publish_ flag in the OnCommand attribute, and run the command.
-``` bash
+Run the command for publish.
+```bash
 $ bin/console telegram:button:update
 ```
 
 For button delete.
-``` bash
+```bash
 $ bin/console telegram:button:delete
-```
-
-```php
-use Luzrain\TelegramBotApi\Method;
-use Luzrain\TelegramBotApi\Type;
-use Luzrain\TelegramBotBundle\Attribute\OnCommand;
-use Luzrain\TelegramBotBundle\TelegramBot\TelegramCommand;
-
-final class CommandsController extends TelegramCommand
-{
-    #[OnCommand(command: '/command1', description: 'Test command 1', publish: true)]
-    public function __invoke(Type\Message $message): Method
-    {
-        return $this->reply('Command 1 response');
-    }
-
-    #[OnCommand(command: '/command2', description: 'Test command 2', publish: true)]
-    public function __invoke(Type\Message $message): Method
-    {
-        return $this->reply('Command 2 response');
-    }
-
-    #[OnCommand(command: '/command3', description: 'This command will not be published', publish: false)]
-    public function __invoke(Type\Message $message): Method
-    {
-        return $this->reply('Command 3 response');
-    }
-}
 ```
