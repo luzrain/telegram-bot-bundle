@@ -105,10 +105,12 @@ return static function (array $config, ContainerBuilder $container) {
     ;
 
     /** @var \Closure $controllerConfigurate */
-    $controllerConfigurate = static function (ChildDefinition $definition, object $attribute, \ReflectionMethod $reflector): void {
+    $controllerConfigurate = static function (ChildDefinition $definition, object $attribute, \ReflectionMethod $reflector) use ($container): void {
+        $value = $attribute->command ?? $attribute->callbackData ?? '';
+
         $definition->addTag('telegram_bot.command', [
             'event' => $attribute->event,
-            'value' => $attribute->command ?? $attribute->callbackData ?? '',
+            'value' => $container->getParameterBag()->resolveValue($value),
             'controller' => $reflector->getDeclaringClass()->getName() . '::' . $reflector->getName(),
             'priority' => $attribute->priority,
         ]);
