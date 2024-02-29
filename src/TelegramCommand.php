@@ -10,16 +10,11 @@ use Luzrain\TelegramBotApi\Type;
 
 abstract class TelegramCommand
 {
-    private Type\User $user;
+    private int|null $chatId = null;
 
-    public function setUser(Type\User $user): void
+    public function setChatId(int|null $chatId): void
     {
-        $this->user = $user;
-    }
-
-    public function getUser(): Type\User
-    {
-        return $this->user;
+        $this->chatId = $chatId;
     }
 
     protected function reply(
@@ -28,9 +23,13 @@ abstract class TelegramCommand
         bool|null $disableNotification = null,
         bool|null $protectContent = null,
         Type\InlineKeyboardMarkup|Type\ReplyKeyboardMarkup|Type\ReplyKeyboardRemove|Type\ForceReply|null $replyMarkup = null,
-    ): Method\SendMessage {
+    ): Method\SendMessage|EventCallbackReturn {
+        if ($this->chatId === null) {
+            return $this->stop();
+        }
+
         return new Method\SendMessage(
-            chatId: $this->getUser()->id,
+            chatId: $this->chatId,
             text: $text,
             parseMode: $parseMode,
             disableNotification: $disableNotification,
