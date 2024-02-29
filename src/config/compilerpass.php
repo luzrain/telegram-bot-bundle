@@ -47,11 +47,13 @@ return new class () implements CompilerPassInterface {
                 new Reference('telegram_bot.client_api'),
                 new Reference('telegram_bot.controllers_locator'),
                 $controllersMap,
-            ]);
+            ])
+        ;
 
         $container
             ->register('telegram_bot.command_metadata_provider', CommandMetadataProvider::class)
-            ->setArguments([$controllersMap]);
+            ->setArguments([$controllersMap])
+        ;
     }
 
     private function referenceMap(array $serviceClasses): array
