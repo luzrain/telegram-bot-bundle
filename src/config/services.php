@@ -28,6 +28,7 @@ return static function (array $config, ContainerBuilder $container) {
             new Reference($config['stream_factory']),
             new Reference($config['http_client']),
             $config['api_token'],
+            $config['api_server'],
         ])
     ;
 

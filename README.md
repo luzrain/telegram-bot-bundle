@@ -28,6 +28,7 @@ return [
 
 telegram_bot:
   api_token: API_TOKEN
+#  api_server: https://api.telegram.org
 #  webhook:
 #    url: https://localhost/tg-webhook
 ```
