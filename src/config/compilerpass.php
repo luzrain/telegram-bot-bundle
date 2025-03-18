@@ -9,7 +9,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
-return new class () implements CompilerPassInterface {
+return new class implements CompilerPassInterface {
     public function process(ContainerBuilder $container): void
     {
         $controllers = $container->findTaggedServiceIds('telegram_bot.controller');
