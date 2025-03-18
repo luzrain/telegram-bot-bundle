@@ -36,14 +36,15 @@ final readonly class UpdateHandler
      */
     private function createEvent(string $event, string $value, string $controller): Event
     {
+        /** @psalm-suppress UnsafeInstantiation */
         return match ($event) {
-            Event\Command::class => new $event($value, function (object $update, string ...$params) use ($controller) {
+            Event\Command::class => new $event($value, function (object $update, string ...$params) use ($controller): mixed {
                 return $this->runController($controller, $update, $params);
             }),
-            Event\CallbackDataQuery::class => new $event($value, function (object $update) use ($controller) {
+            Event\CallbackDataQuery::class => new $event($value, function (object $update) use ($controller): mixed {
                 return $this->runController($controller, $update);
             }),
-            default => new $event(function (object $update) use ($controller) {
+            default => new $event(function (object $update) use ($controller): mixed {
                 return $this->runController($controller, $update);
             }),
         };
@@ -64,6 +65,7 @@ final readonly class UpdateHandler
 
     private function findChatId(object $update): int|null
     {
+        /** @psalm-suppress RawObjectIteration */
         if ($update instanceof Update) {
             foreach ($update as $updateItem) {
                 if (null !== $chatId = $updateItem->chat->id ?? $updateItem->message->chat->id ?? null) {

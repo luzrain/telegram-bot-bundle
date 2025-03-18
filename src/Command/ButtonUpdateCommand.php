@@ -23,7 +23,7 @@ final class ButtonUpdateCommand extends Command
         private CommandMetadataProvider $commandMetadataProvider,
         callable|null $descriptionProcessor,
     ) {
-        $this->descriptionProcessor = $descriptionProcessor ? $descriptionProcessor(...) : static fn(string $str) => $str;
+        $this->descriptionProcessor = $descriptionProcessor !== null ? $descriptionProcessor(...) : static fn(string $str): string => $str;
         parent::__construct();
     }
 

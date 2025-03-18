@@ -20,10 +20,10 @@
         "symfony/http-kernel": "^7.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.50",
-        "phpunit/phpunit": "^10.5",
-        "symfony/framework-bundle": "^7.0",
-        "vimeo/psalm": "^5.22"
+        "friendsofphp/php-cs-fixer": "^3.72",
+        "phpunit/phpunit": "^10.5.45",
+        "symfony/framework-bundle": "^7.2.4",
+        "vimeo/psalm": "^6.9.1"
     },
     "autoload": {
         "psr-4": {
