@@ -8,12 +8,17 @@ use Luzrain\TelegramBotApi\BotApi;
 use Luzrain\TelegramBotApi\Exception\TelegramApiException;
 use Luzrain\TelegramBotBundle\LongPollingService;
 use Luzrain\TelegramBotBundle\UpdateHandler;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    'telegram:polling:start',
+    'Run polling client to receive updates',
+)]
 final class PolllingStartCommand extends Command
 {
     public function __construct(
@@ -22,16 +27,6 @@ final class PolllingStartCommand extends Command
         private BotApi $botApi,
     ) {
         parent::__construct();
-    }
-
-    public static function getDefaultName(): string
-    {
-        return 'telegram:polling:start';
-    }
-
-    public static function getDefaultDescription(): string
-    {
-        return 'Run polling client to receive updates';
     }
 
     protected function configure(): void

@@ -8,12 +8,17 @@ use Luzrain\TelegramBotApi\BotApi;
 use Luzrain\TelegramBotApi\Exception\TelegramApiException;
 use Luzrain\TelegramBotApi\Method\SetWebhook;
 use Luzrain\TelegramBotApi\Type\InputFile;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    'telegram:webhook:update',
+    'Update webhook settings',
+)]
 final class WebhookUpdateCommand extends Command
 {
     public function __construct(
@@ -26,16 +31,6 @@ final class WebhookUpdateCommand extends Command
         private string|null $certificate,
     ) {
         parent::__construct();
-    }
-
-    public static function getDefaultName(): string
-    {
-        return 'telegram:webhook:update';
-    }
-
-    public static function getDefaultDescription(): string
-    {
-        return 'Update webhook settings';
     }
 
     protected function configure(): void

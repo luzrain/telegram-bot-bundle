@@ -55,7 +55,7 @@ return static function (array $config, ContainerBuilder $container) {
 
     $container
         ->register('telegram_bot.webhook_update_command', WebhookUpdateCommand::class)
-        ->addTag('console.command')
+        ->setAutoconfigured(true)
         ->setArguments([
             new Reference(BotApi::class),
             $config['allowed_updates'],
@@ -68,19 +68,19 @@ return static function (array $config, ContainerBuilder $container) {
 
     $container
         ->register('telegram_bot.webhook_info_command', WebhookInfoCommand::class)
-        ->addTag('console.command')
+        ->setAutoconfigured(true)
         ->setArguments([new Reference(BotApi::class)])
     ;
 
     $container
         ->register('telegram_bot.webhook_delete_command', WebhookDeleteCommand::class)
-        ->addTag('console.command')
+        ->setAutoconfigured(true)
         ->setArguments([new Reference(BotApi::class)])
     ;
 
     $container
         ->register('telegram_bot.polling_start_command', PolllingStartCommand::class)
-        ->addTag('console.command')
+        ->setAutoconfigured(true)
         ->setArguments([
             new Reference('telegram_bot.long_polling_service'),
             new Reference('telegram_bot.update_handler'),
@@ -90,7 +90,7 @@ return static function (array $config, ContainerBuilder $container) {
 
     $container
         ->register('telegram_bot.button_update_commands', ButtonUpdateCommand::class)
-        ->addTag('console.command')
+        ->setAutoconfigured(true)
         ->setArguments([
             new Reference(BotApi::class),
             new Reference('telegram_bot.command_metadata_provider'),
@@ -100,7 +100,7 @@ return static function (array $config, ContainerBuilder $container) {
 
     $container
         ->register('telegram_bot.button_delete_command', ButtonDeleteCommand::class)
-        ->addTag('console.command')
+        ->setAutoconfigured(true)
         ->setArguments([new Reference(BotApi::class)])
     ;
 

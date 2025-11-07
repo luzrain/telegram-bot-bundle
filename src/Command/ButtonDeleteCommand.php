@@ -8,27 +8,22 @@ use Luzrain\TelegramBotApi\BotApi;
 use Luzrain\TelegramBotApi\Exception\TelegramApiException;
 use Luzrain\TelegramBotApi\Method;
 use Luzrain\TelegramBotApi\Type;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    'telegram:button:delete',
+    'Delete bot\'s menu button',
+)]
 final class ButtonDeleteCommand extends Command
 {
     public function __construct(
         private BotApi $botApi,
     ) {
         parent::__construct();
-    }
-
-    public static function getDefaultName(): string
-    {
-        return 'telegram:button:delete';
-    }
-
-    public static function getDefaultDescription(): string
-    {
-        return 'Delete bot\'s mebu button';
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int

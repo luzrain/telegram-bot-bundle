@@ -9,11 +9,16 @@ use Luzrain\TelegramBotApi\Exception\TelegramApiException;
 use Luzrain\TelegramBotApi\Method;
 use Luzrain\TelegramBotApi\Type;
 use Luzrain\TelegramBotBundle\CommandMetadataProvider;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+#[AsCommand(
+    'telegram:button:update',
+    'Set published list of commands as as default bot\'s menu button',
+)]
 final class ButtonUpdateCommand extends Command
 {
     private \Closure $descriptionProcessor;
@@ -25,16 +30,6 @@ final class ButtonUpdateCommand extends Command
     ) {
         $this->descriptionProcessor = $descriptionProcessor !== null ? $descriptionProcessor(...) : static fn(string $str): string => $str;
         parent::__construct();
-    }
-
-    public static function getDefaultName(): string
-    {
-        return 'telegram:button:update';
-    }
-
-    public static function getDefaultDescription(): string
-    {
-        return 'Set published list of commands as as default bot\'s mebu button';
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
