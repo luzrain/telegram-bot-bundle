@@ -14,8 +14,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    'telegram:webhook:info',
-    'Get current webhook status',
+    name: 'telegram:webhook:info',
+    description: 'Get current webhook status',
 )]
 final class WebhookInfoCommand extends Command
 {

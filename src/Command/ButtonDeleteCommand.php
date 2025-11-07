@@ -15,8 +15,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    'telegram:button:delete',
-    'Delete bot\'s menu button',
+    name: 'telegram:button:delete',
+    description: 'Delete bot\'s menu button',
 )]
 final class ButtonDeleteCommand extends Command
 {

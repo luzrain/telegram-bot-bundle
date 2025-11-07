@@ -16,8 +16,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    'telegram:button:update',
-    'Set published list of commands as as default bot\'s menu button',
+    name: 'telegram:button:update',
+    description: 'Set published list of commands as as default bot\'s menu button',
 )]
 final class ButtonUpdateCommand extends Command
 {

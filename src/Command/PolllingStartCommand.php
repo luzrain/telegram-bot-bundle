@@ -16,8 +16,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    'telegram:polling:start',
-    'Run polling client to receive updates',
+    name: 'telegram:polling:start',
+    description: 'Run polling client to receive updates',
 )]
 final class PolllingStartCommand extends Command
 {

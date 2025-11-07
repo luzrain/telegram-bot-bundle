@@ -14,8 +14,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    'telegram:webhook:delete',
-    'Remove webhook integration',
+    name: 'telegram:webhook:delete',
+    description: 'Remove webhook integration',
 )]
 final class WebhookDeleteCommand extends Command
 {

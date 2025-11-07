@@ -16,8 +16,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    'telegram:webhook:update',
-    'Update webhook settings',
+    name: 'telegram:webhook:update',
+    description: 'Update webhook settings',
 )]
 final class WebhookUpdateCommand extends Command
 {
