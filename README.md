@@ -1,12 +1,12 @@
-# Symfony bundle for Telegram Bot API
-[![PHP >=8.2](https://img.shields.io/badge/PHP->=8.2-777bb3.svg?style=flat)](https://www.php.net/releases/8.2/en.php)
+# Symfony Bundle for Telegram Bot API
+![PHP >=8.2](https://img.shields.io/badge/PHP->=8.2-777bb3.svg?style=flat)
 ![Symfony ^7.0](https://img.shields.io/badge/Symfony-^7.0-374151.svg?style=flat)
-[![Tests Status](https://img.shields.io/github/actions/workflow/status/luzrain/telegram-bot-bundle/tests.yaml?branch=master)](../../actions/workflows/tests.yaml)
+![Tests Status](https://img.shields.io/github/actions/workflow/status/luzrain/telegram-bot-bundle/tests.yaml?branch=master)
 
 A symfony bundle for [luzrain/telegram-bot-api](https://github.com/luzrain/telegram-bot-api) library.
 
-## Getting started
-### Install composer packages
+## Getting Started
+### Install Composer Packages
 ```bash
 $ composer require luzrain/telegram-bot-bundle symfony/http-client nyholm/psr7
 ```
@@ -22,30 +22,19 @@ return [
 ];
 ```
 
-### Configure bundle
+### Configure the Bundle
 ```yaml
 # config/packages/telegram_bot.yaml
 
 telegram_bot:
   api_token: API_TOKEN
-#  api_server: https://api.telegram.org
 #  webhook:
 #    url: https://localhost/tg-webhook
 ```
 
-### Optional. Configure webhook route
-```yaml
-# config/routes.yaml
-
-# ...
-telegram_webhook:
-  path: /tg-webhook
-  controller: telegram_bot.webhook_controller
-```
-
-Note that *symfony/http-client* and *nyholm/psr7* are not necessary. You can use any PSR-18 client and PSR-17 factories.  
-Set custom services in *http_client*, *request_factory*, *stream_factory* options in *telegram_bot.yaml* configuration file.  
-Here is an example how to use [guzzle](https://github.com/guzzle/guzzle) http client:
+Note that `symfony/http-client` and `nyholm/psr7` are not required. You may use any PSR-18 http client and PSR-17 factory implementations.
+To use your own services, set the `http_client`, `request_factory`, and `stream_factory` options in the `telegram_bot.yaml` configuration file.  
+Here is an example how to use [Guzzle](https://github.com/guzzle/guzzle) http client:
 
 ```yaml
 # config/services.yaml
@@ -63,38 +52,47 @@ psr17.guzzle_factory:
 # config/packages/telegram_bot.yaml
 
 telegram_bot:
+  api_token: API_TOKEN
   http_client: psr18.guzzle_client
   request_factory: psr17.guzzle_factory
   stream_factory: psr17.guzzle_factory
-  api_token: API_TOKEN
 ```
 
-For a complete list of available options with documentation, see the command output.
+For a full list of available configuration options and their documentation, run:
 ```bash
 $ bin/console config:dump-reference telegram_bot
 ```
 
-### Getting messages from telegram
-There are two ways to receive messages from Telegram.
-#### Webhook. Recommended way.
-You must configure the webhook route and make it available from the Internet.  
-Configure *webhook.url* option in *telegram_bot.yaml* configuration file;  
-Update the webhook configuration in telegram bot with the command.  
+### Receiving Messages from Telegram
+There are two ways to receive updates from Telegram:
+#### 1. Webhook (recommended)
+- Configure a webhook and make sure the endpoint is publicly accessible.
+```yaml
+# config/routes.yaml
+
+# ...
+telegram_webhook:
+  path: /tg-webhook
+  controller: telegram_bot.webhook_controller
+```
+
+- Set the `webhook.url` option in your `telegram_bot.yaml` configuration file.
+- Apply the webhook settings to your bot:
 ```bash
 $ bin/console telegram:webhook:update
 ```
 
-Note that each time you change *webhook* and *allowed_updates* options in configuration files you should run this command for update telegram bot settings.
+Whenever you change the `webhook` or `allowed_updates` configuration options, run this command again to update the bot's webhook settings.
 
-#### Polling daemon.  
-Use it in a development environment or if you can't provide public access to the webhook url.  
-Run the polling daemon with the command.  
+#### 2. Polling Daemon
+Useful during development or when you cannot expose a public URL.  
+Start the polling daemon:
 ```bash
 $ bin/console telegram:polling:start
 ```
 
 ## Examples
-### Command controller
+### Command Controller
 ```php
 use Luzrain\TelegramBotApi\Method;
 use Luzrain\TelegramBotApi\Type;
@@ -113,7 +111,7 @@ final class StartCommandController extends TelegramCommand
 }
 ```
 
-### Any event controller
+### Any Event Controller
 ```php
 use Luzrain\TelegramBotApi\Event;
 use Luzrain\TelegramBotApi\Method;
@@ -135,19 +133,19 @@ final class OnMessageController
 }
 ```
 
-### Publish command list as bot button
-It's possible to publish all your commands, which will be shown as a list of available commands in the bot's menu button.
-To do this, fill in the *description* field and the *publish* flag in the OnCommand attribute.
+### Publishing Commands to the Bot Menu Button
+You can publish your bot commands so they appear in the bot’s menu button.  
+To do this, set both the `description` and `publish` arguments in the `OnCommand` attribute:
 ```php
 #[OnCommand(command: '/command1', description: 'Test command 1', publish: true)]
 ```
 
-Run the command for publish.
+Publish commands list to the menu button:
 ```bash
 $ bin/console telegram:button:update
 ```
 
-For button delete.
+To remove menu button:
 ```bash
 $ bin/console telegram:button:delete
 ```
