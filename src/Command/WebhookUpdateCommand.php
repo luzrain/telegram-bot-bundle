@@ -27,6 +27,7 @@ final class WebhookUpdateCommand extends Command
         private array $allowedUpdates,
         private string|null $webhookUrl,
         private int|null $maxConnections,
+        #[\SensitiveParameter]
         private string|null $secretToken,
         private string|null $certificate,
     ) {

@@ -17,6 +17,7 @@ final readonly class WebHookController
 {
     public function __construct(
         private UpdateHandler $updateHandler,
+        #[\SensitiveParameter]
         private string|null $secretToken,
     ) {
     }
