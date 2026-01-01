@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Luzrain\TelegramBotBundle\config;
+
 use Luzrain\TelegramBotBundle\CommandMetadataProvider;
 use Luzrain\TelegramBotBundle\UpdateHandler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;

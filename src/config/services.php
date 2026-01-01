@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Luzrain\TelegramBotBundle\config;
+
 use Luzrain\TelegramBotApi\BotApi;
 use Luzrain\TelegramBotApi\ClientApi;
 use Luzrain\TelegramBotBundle\Attribute\OnCallback;
