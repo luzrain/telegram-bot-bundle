@@ -14,10 +14,10 @@
     "require": {
         "php": ">=8.2",
         "luzrain/telegram-bot-api": "^3.11.0",
-        "symfony/config": "^7.0",
-        "symfony/console": "^7.0",
-        "symfony/dependency-injection": "^7.0",
-        "symfony/http-kernel": "^7.0"
+        "symfony/config": "^7.0|8.0",
+        "symfony/console": "^7.0|8.0",
+        "symfony/dependency-injection": "^7.0|8.0",
+        "symfony/http-kernel": "^7.0|8.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.89.1",
