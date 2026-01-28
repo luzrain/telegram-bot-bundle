@@ -1,6 +1,6 @@
 # Symfony Bundle for Telegram Bot API
 ![PHP >=8.2](https://img.shields.io/badge/PHP->=8.2-777bb3.svg?style=flat)
-![Symfony ^7.0](https://img.shields.io/badge/Symfony-^7.0-374151.svg?style=flat)
+![Symfony ^7.0|^8.0](https://img.shields.io/badge/Symfony-^7.0|^8.0-374151.svg?style=flat)
 ![Tests Status](https://img.shields.io/github/actions/workflow/status/luzrain/telegram-bot-bundle/tests.yaml?branch=master)
 
 A symfony bundle for [luzrain/telegram-bot-api](https://github.com/luzrain/telegram-bot-api) library.
